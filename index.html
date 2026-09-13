@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NMAT Practice Test</title>
+    <style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+    color: #333;
+    display: flex;
+    justify-content: center;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- Start / Pre-Test Screen --- */
+.start-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 30px;
+    background-color: #fafafa;
+    padding: 40px;
+}
+
+.start-logo {
+    justify-content: center;
+}
+
+.start-card {
+    max-width: 600px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px 35px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.start-card h2 {
+    margin-bottom: 15px;
+    color: #2b3a4a;
+}
+
+.start-checklist {
+    margin: 0 0 25px 20px;
+    line-height: 1.7;
+    font-size: 14px;
+    color: #444;
+}
+
+.start-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 30px;
+    font-size: 16px;
+}
+
+/* --- Top Header --- */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2b3a4a;
+    color: #fff;
+    padding: 10px 20px;
+    height: 60px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mock-logo {
+    width: 30px;
+    height: 30px;
+    background-color: #4a90e2;
+    border-radius: 50%;
+}
+
+.test-title {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.timer {
+    font-size: 18px;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-radius: 4px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.saved-status {
+    color: #bbb;
+}
+
+.utility-icon {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* --- Sub Header --- */
+.sub-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e6e6e6;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+    height: 50px;
+}
+
+.sh-left select {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.sh-left select:disabled {
+    background-color: #eee;
+    color: #888;
+}
+
+.sh-center {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-arrow, .grid-icon-btn, .page-btn {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.page-btn {
+    min-width: 30px;
+    text-align: center;
+}
+
+.page-btn.active {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.page-btn.attempted {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.page-btn.revisited {
+    background-color: #d9534f;
+    color: white;
+    border-color: #d9534f;
+}
+
+.pagination {
+    display: flex;
+    gap: 2px;
+}
+
+.sh-right {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    padding: 5px 15px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.nav-btn.primary {
+    background-color: #2b3a4a;
+    color: white;
+    border-color: #2b3a4a;
+}
+
+/* --- Attempted counter bar (sits centered under pagination, like the real NMAT UI) --- */
+.attempted-bar {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    background-color: #f5f5f5;
+    padding: 4px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* --- Main Content --- */
+.main-content {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.left-panel {
+    width: 50%;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-panel {
+    width: 50%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.question-number {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.revisit-btn {
+    background: none;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.revisit-btn.active {
+    color: #d9534f;
+    border-color: #d9534f;
+}
+
+#question-body-left {
+    flex-grow: 1;
+}
+
+#question-text {
+    font-size: 16px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.right-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.choice-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    border: 1px solid #eee;
+    padding: 10px 12px;
+    border-radius: 4px;
+}
+
+.choice-label:hover {
+    background-color: #f5f9ff;
+}
+
+.choice-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.clear-btn {
+    background: none;
+    border: 1px solid #ccc;
+    padding: 5px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.response-box {
+    flex-grow: 1;
+    width: 100%;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #fdfdfd;
+}
+
+/* --- Meta screens (Reminders / Break / End) rendered inside the same left-panel slot --- */
+.meta-screen {
+    background-color: #16233a;
+    color: #fff;
+    padding: 25px;
+    border-radius: 6px;
+    line-height: 1.6;
+}
+
+.meta-screen h2 {
+    margin-bottom: 15px;
+}
+
+.meta-screen .warn {
+    color: #ffcf5c;
+    font-weight: bold;
+}
+
+.meta-screen .large-timer {
+    font-size: 40px;
+    text-align: center;
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+}
+
+.nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* --- Confirmation Dialog --- */
+.confirm-content {
+    width: 420px;
+    height: auto;
+    max-width: 90%;
+}
+
+.confirm-content .modal-body {
+    padding: 25px 20px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+}
+
+/* --- Score & Mistakes Report --- */
+.score-modal-content {
+    width: 700px;
+}
+
+.score-overall {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.score-actions {
+    margin-bottom: 15px;
+}
+
+.score-section h3 {
+    margin: 20px 0 10px;
+    color: #2b3a4a;
+    font-size: 15px;
+}
+
+.mistake-card {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #fafafa;
+}
+
+.mistake-card pre {
+    white-space: pre-wrap;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.copy-fallback {
+    width: 100%;
+    height: 100px;
+    margin-top: 8px;
+    font-size: 12px;
+    font-family: monospace;
+}
+
+/* --- Modal Grid View --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    width: 80%;
+    max-width: 800px;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ccc;
+    background: #2b3a4a;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-tabs {
+    display: flex;
+    padding: 10px 20px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    gap: 10px;
+}
+
+.tab-btn {
+    padding: 5px 15px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.tab-btn.active {
+    background: #2b3a4a;
+    color: white;
+    border-color: #2b3a4a;
+}
+
+.modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 10px;
+}
+
+.grid-item {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background: white;
+}
+
+.grid-item.attempted {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.grid-item.revisited {
+    background-color: #d9534f;
+    color: white;
+    border-color: #d9534f;
+}
+
+.grid-item.active {
+    outline: 2px solid #333;
+    outline-offset: 2px;
+}
+
+</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Pre-Test Start Screen -->
+    <div class="app-container" id="start-view">
+        <div class="start-container">
+            <div class="logo-section start-logo">
+                <div class="mock-logo"></div>
+                <h1 class="test-title">PRACTICE TEST_NMAT_R</h1>
+            </div>
+            <div class="start-card">
+                <h2>Before you begin</h2>
+                <ul class="start-checklist">
+                    <li>This simulation follows the real NMAT interface: fixed section order, one 10-minute break, and no going back once a part is submitted.</li>
+                    <li>Part 1 (Verbal, Inductive, Quantitative, Perceptual Acuity) is timed at 3 hours.</li>
+                    <li>Part 2 (Biology, Physics, Social Science, Chemistry) is timed at 2.5 hours.</li>
+                    <li>Once you click Start Test, the certifying statement will appear first, followed by Part 1. Timers begin automatically per section.</li>
+                </ul>
+                <button class="nav-btn primary start-btn" id="btn-start-test">Start Test</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container hidden" id="main-app">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="logo-section">
+                <div class="mock-logo"></div>
+                <h1 class="test-title">PRACTICE TEST_NMAT_R</h1>
+            </div>
+            <div class="header-center">
+                <div class="timer hidden" id="main-timer">00:00:00</div>
+            </div>
+            <div class="header-right">
+                <span class="saved-status">Saved: 0 seconds ago</span>
+                <i class="fa fa-user utility-icon"></i>
+                <i class="fa fa-cog utility-icon"></i>
+            </div>
+        </header>
+
+        <!-- Sub Header (persistent chrome across ALL sections, including break/end) -->
+        <div class="sub-header">
+            <div class="sh-left">
+                <select id="section-dropdown" disabled>
+                    <option value="reminders">1. Important Reminders</option>
+                    <option value="part1">2. Part 1</option>
+                    <option value="break">3. Test Break</option>
+                    <option value="part2">4. Part 2</option>
+                    <option value="end">5. End Test Page</option>
+                </select>
+            </div>
+            <div class="sh-center">
+                <button class="nav-arrow" id="nav-left">&lt;</button>
+                <div class="pagination" id="pagination-container"></div>
+                <button class="nav-arrow" id="nav-right">&gt;</button>
+                <button class="grid-icon-btn" id="open-grid-btn"><i class="fa fa-th"></i></button>
+            </div>
+            <div class="sh-right">
+                <button class="nav-btn" id="btn-prev">Previous</button>
+                <button class="nav-btn primary" id="btn-next">Next</button>
+            </div>
+        </div>
+        <div class="attempted-bar">
+            <span id="attempted-display">Attempted: 0/0</span>
+        </div>
+
+        <!-- Content Body -->
+        <div class="main-content">
+            <!-- Left Panel: Question number, revisit later, question/passage text -->
+            <div class="left-panel">
+                <div class="question-header">
+                    <span class="question-number" id="q-number-display">Question 1</span>
+                    <button class="revisit-btn" id="revisit-btn">
+                        <i class="fa fa-flag"></i> Revisit Later
+                    </button>
+                </div>
+                <div id="question-body-left">
+                    <p id="question-text">Loading question...</p>
+                </div>
+            </div>
+
+            <!-- Right Panel: Choices OR free-response box (break/end screens) -->
+            <div class="right-panel">
+                <div class="right-panel-header">
+                    <span id="right-panel-title">Select an option</span>
+                    <button class="clear-btn hidden" id="clear-response-btn">Clear Response</button>
+                </div>
+                <div class="choices" id="choices-container"></div>
+                <textarea class="response-box hidden" id="response-box" placeholder="Enter your Response" readonly></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score & Mistakes Modal -->
+    <div class="modal-overlay hidden" id="score-modal">
+        <div class="modal-content score-modal-content">
+            <div class="modal-header">
+                <h2>Score & Mistakes</h2>
+                <button class="close-btn" id="close-score-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="score-overall" class="score-overall"></p>
+                <div class="score-actions">
+                    <button class="nav-btn" id="copy-all-mistakes">Copy All Mistakes</button>
+                </div>
+                <textarea class="copy-fallback hidden" id="copy-all-fallback" readonly></textarea>
+                <div id="score-report-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next Section Confirmation Dialog -->
+    <div class="modal-overlay hidden" id="confirm-modal">
+        <div class="modal-content confirm-content">
+            <div class="modal-header">
+                <h2>Confirm</h2>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Are you sure?</p>
+            </div>
+            <div class="confirm-actions">
+                <button class="nav-btn" id="confirm-no">No</button>
+                <button class="nav-btn primary" id="confirm-yes">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid View Modal -->
+    <div class="modal-overlay hidden" id="grid-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Question Grid</h2>
+                <button class="close-btn" id="close-grid-btn">&times;</button>
+            </div>
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-filter="all">All</button>
+                <button class="tab-btn" data-filter="attempted">Attempted</button>
+                <button class="tab-btn" data-filter="revisited">Revisited</button>
+                <button class="tab-btn" data-filter="unattempted">Unattempted</button>
+            </div>
+            <div class="modal-body">
+                <div class="grid-container" id="grid-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// --- Section Model ---
+// Mirrors the real NMAT demo: every section (even the one-item Reminders,
+// Break, and End screens) shares the exact same chrome: dropdown, pagination,
+// Attempted counter, grid button, and Previous/Next controls.
+const SECTIONS = [
+    { key: 'reminders', label: '1. Important Reminders', kind: 'info', total: 1 },
+    { key: 'part1',     label: '2. Part 1',               kind: 'test', total: 160, timer: 3 * 60 * 60 },
+    { key: 'break',     label: '3. Test Break',           kind: 'break', total: 1, timer: 10 * 60 },
+    { key: 'part2',     label: '4. Part 2',               kind: 'test', total: 200, timer: 2.5 * 60 * 60 },
+    { key: 'end',       label: '5. End Test Page',        kind: 'end', total: 1 }
+];
+
+// --- Question Bank ---
+// Keyed by `${sectionKey}_${itemNumber}` (e.g. 'part1_1', 'part2_101').
+// Any item placed here is rendered with its real stem/choices and is graded
+// on the End of Test "View Score and Mistakes" report. Any item NOT listed
+// here falls back to a generic placeholder and is excluded from scoring.
+//
+// Shape of each entry:
+// 'part1_81': {
+//     subject: 'Quantitative',
+//     stem: 'Question text goes here?',
+//     choices: { A: '...', B: '...', C: '...', D: '...' },
+//     correct: 'A'
+// }
+const QUESTION_BANK = {
+    "part1_1": {
+        "subject": "Verbal",
+        "stem": "ALVEOLI : RESPIRATORY :: VENTRICLES :",
+        "choices": {
+            "A": "endocrine",
+            "B": "circulatory",
+            "C": "digestive",
+            "D": "nervous"
+        },
+        "correct": "B"
+    },
+    "part1_2": {
+        "subject": "Verbal",
+        "stem": "HEAD : FEET :: STALACTITE :",
+        "choices": {
+            "A": "icicle",
+            "B": "limestone",
+            "C": "calcium",
+            "D": "stalagmite"
+        },
+        "correct": "D"
+    },
+    "part1_3": {
+        "subject": "Verbal",
+        "stem": "GOAL : ACTION :: POLICY :",
+        "choices": {
+            "A": "formulation",
+            "B": "presentation",
+            "C": "implementation",
+            "D": "evaluation"
+        },
+        "correct": "C"
+    },
+    "part1_4": {
+        "subject": "Verbal",
+        "stem": "CHEF : KNIFE :: SURGEON :",
+        "choices": {
+            "A": "anesthesia",
+            "B": "scalpel",
+            "C": "bandage",
+            "D": "gloves"
+        },
+        "correct": "B"
+    },
+    "part1_5": {
+        "subject": "Verbal",
+        "stem": "SCALPEL : CUT :: FORCEPS :",
+        "choices": {
+            "A": "transfuse",
+            "B": "remove",
+            "C": "retract",
+            "D": "hold"
+        },
+        "correct": "D"
+    },
+    "part1_6": {
+        "subject": "Verbal",
+        "stem": "SEDATIVE : PAIN :: ANTISEPTIC :",
+        "choices": {
+            "A": "emergency",
+            "B": "anxiety",
+            "C": "fracture",
+            "D": "wound"
+        },
+        "correct": "D"
+    },
+    "part1_7": {
+        "subject": "Verbal",
+        "stem": "VINEGAR : RUNNY :: KETCHUP :",
+        "choices": {
+            "A": "turbid",
+            "B": "motile",
+            "C": "viscous",
+            "D": "pectinous"
+        },
+        "correct": "C"
+    },
+    "part1_8": {
+        "subject": "Verbal",
+        "stem": "ENTHUSIASTIC : PASSIONATE :: PLENTIFUL :",
+        "choices": {
+            "A": "abundant",
+            "B": "scant",
+            "C": "minimal",
+            "D": "ample"
+        },
+        "correct": "A"
+    },
+    "part1_9": {
+        "subject": "Verbal",
+        "stem": "SCLERA : EYEBALL :: CRANIUM :",
+        "choices": {
+            "A": "scalp",
+            "B": "bone",
+            "C": "head",
+            "D": "brain"
+        },
+        "correct": "D"
+    },
+    "part1_10": {
+        "subject": "Verbal",
+        "stem": "VALID : LOGIC :: TRUE :",
+        "choices": {
+            "A": "false",
+            "B": "fact",
+            "C": "argument",
+            "D": "reason"
+        },
+        "correct": "B"
+    },
+    "part1_11": {
+        "subject": "Verbal",
+        "stem": "COMFORT : AFFLICTION :: SALVE :",
+        "choices": {
+            "A": "problem",
+            "B": "fear",
+            "C": "tragedy",
+            "D": "wound"
+        },
+        "correct": "D"
+    },
+    "part1_12": {
+        "subject": "Verbal",
+        "stem": "DRUPE : POME :: VEGETABLE :",
+        "choices": {
+            "A": "mulch",
+            "B": "crop",
+            "C": "bulb",
+            "D": "herb"
+        },
+        "correct": "D"
+    },
+    "part1_13": {
+        "subject": "Verbal",
+        "stem": "DISCOVER : LEARN :: PROCESS :",
+        "choices": {
+            "A": "work",
+            "B": "apply",
+            "C": "prepare",
+            "D": "pass"
+        },
+        "correct": "C"
+    },
+    "part1_14": {
+        "subject": "Verbal",
+        "stem": "PRECISE : AMBIGUOUS :: CONCISE :",
+        "choices": {
+            "A": "verbose",
+            "B": "profound",
+            "C": "narrow",
+            "D": "thorough"
+        },
+        "correct": "A"
+    },
+    "part1_15": {
+        "subject": "Verbal",
+        "stem": "RESPECT : REVERE :: SHAME :",
+        "choices": {
+            "A": "ostracize",
+            "B": "repudiate",
+            "C": "execute",
+            "D": "humiliate"
+        },
+        "correct": "D"
+    },
+    "part1_16": {
+        "subject": "Verbal",
+        "stem": "WEIGHT : KILOGRAM :: VOLUME :",
+        "choices": {
+            "A": "liter",
+            "B": "carat",
+            "C": "intensity",
+            "D": "quantity"
+        },
+        "correct": "A"
+    },
+    "part1_17": {
+        "subject": "Verbal",
+        "stem": "WATER : THIRST :: SALVE :",
+        "choices": {
+            "A": "ointment",
+            "B": "wound",
+            "C": "scar",
+            "D": "cure"
+        },
+        "correct": "B"
+    },
+    "part1_18": {
+        "subject": "Verbal",
+        "stem": "(1) English is the language of learning. I've known this since before I could go to school. As a toddler, my first study materials were a set of flash cards that my mother used to teach me the English alphabet.<br><br>(2) My mother made home conducive to learning English: all my storybooks and coloring books were in English, and so were the cartoons I watched and the music I listened to. She required me to speak English at home. She even hired tutors to help me learn to read and write in English.<br><br>(3) In school I learned to think in English. We used English to learn about numbers, equations and variables. With it we learned about observation and inference, the moon and the stars, monsoons and photosynthesis. With it we learned about shapes and colors, about meter and rhythm. I learned about God in English, and I prayed to Him in English.<br><br>(4) Filipino, on the other hand, was always the 'other' subject \u2014 almost a special subject like PE or Home Economics, except that it was graded the same way as Science, Math, Religion, and English. My classmates and I used to complain about Filipino all the time. Filipino was a chore, like washing the dishes; it was not the language of learning. It was the language we used to speak to the people who washed our dishes.<br><br>(5) We used to think learning Filipino was important because it was practical: Filipino was the language of the world outside the classroom. It was the language of the streets: it was how you spoke to the tindera when you went to the tindahan, what you used to tell your katulong when you had an utos, and how you texted manong when you needed \"sundo na.\"<br><br>(6) That being said though, I was proud of my proficiency with the language. Filipino was the language I used to speak with my cousins and uncles and grandparents in the province, so I never had much trouble reciting.<br><br>(7) It was really only in university that I began to grasp Filipino in terms of language and not just dialect. Filipino was not merely a peculiar variety of language, derived and continuously borrowing from the English and Spanish alphabets; it has its own system, with its own grammar, semantics, sounds, even symbols.<br><br>(8) But more significantly, it has its own way of reading, writing, and thinking. There are ideas and concepts unique to Filipino that can never be translated into another. Try translating bayanihan, tagay, kilig or diskarte.<br><br>(9) Only recently have I begun to grasp Filipino as the language of identity: the language of emotion, experience, and even of learning. And with this comes the realization that I do, in fact, smell worse than a malansang isda. My own language is foreign to me: I speak, think, read and write primarily in English. To borrow the terminology of Fr. Bulatao, I am a split-level Filipino.<br><br>(10) It is neither the language of the classroom and the laboratory, nor the language of the boardroom, the court room, or the operating room. It is not the language of privilege. I may be disconnected from my being Filipino, but with a tongue of privilege I will always have my connections.<br><br>(11) So I have my education to thank for making English my mother language.<br><br>An excerpt from \"Language, Learning, Identity, Privilege\" by James Soriano. The Philippine Daily Inquirer, September 10, 2011.<br><br>With reference to the pieces of information given in the second paragraph, which statement would best describe the author's mother?",
+        "choices": {
+            "A": "She was overprotective.",
+            "B": "She highly valued education.",
+            "C": "She had strong preference for English.",
+            "D": "She spent a lot of time with her child."
+        },
+        "correct": "C"
+    },
+    "part1_19": {
+        "subject": "Verbal",
+        "stem": "(1) English is the language of learning. I've known this since before I could go to school. As a toddler, my first study materials were a set of flash cards that my mother used to teach me the English alphabet.<br><br>(2) My mother made home conducive to learning English: all my storybooks and coloring books were in English, and so were the cartoons I watched and the music I listened to. She required me to speak English at home. She even hired tutors to help me learn to read and write in English.<br><br>(3) In school I learned to think in English. We used English to learn about numbers, equations and variables. With it we learned about observation and inference, the moon and the stars, monsoons and photosynthesis. With it we learned about shapes and colors, about meter and rhythm. I learned about God in English, and I prayed to Him in English.<br><br>(4) Filipino, on the other hand, was always the 'other' subject \u2014 almost a special subject like PE or Home Economics, except that it was graded the same way as Science, Math, Religion, and English. My classmates and I used to complain about Filipino all the time. Filipino was a chore, like washing the dishes; it was not the language of learning. It was the language we used to speak to the people who washed our dishes.<br><br>(5) We used to think learning Filipino was important because it was practical: Filipino was the language of the world outside the classroom. It was the language of the streets: it was how you spoke to the tindera when you went to the tindahan, what you used to tell your katulong when you had an utos, and how you texted manong when you needed \"sundo na.\"<br><br>(6) That being said though, I was proud of my proficiency with the language. Filipino was the language I used to speak with my cousins and uncles and grandparents in the province, so I never had much trouble reciting.<br><br>(7) It was really only in university that I began to grasp Filipino in terms of language and not just dialect. Filipino was not merely a peculiar variety of language, derived and continuously borrowing from the English and Spanish alphabets; it has its own system, with its own grammar, semantics, sounds, even symbols.<br><br>(8) But more significantly, it has its own way of reading, writing, and thinking. There are ideas and concepts unique to Filipino that can never be translated into another. Try translating bayanihan, tagay, kilig or diskarte.<br><br>(9) Only recently have I begun to grasp Filipino as the language of identity: the language of emotion, experience, and even of learning. And with this comes the realization that I do, in fact, smell worse than a malansang isda. My own language is foreign to me: I speak, think, read and write primarily in English. To borrow the terminology of Fr. Bulatao, I am a split-level Filipino.<br><br>(10) It is neither the language of the classroom and the laboratory, nor the language of the boardroom, the court room, or the operating room. It is not the language of privilege. I may be disconnected from my being Filipino, but with a tongue of privilege I will always have my connections.<br><br>(11) So I have my education to thank for making English my mother language.<br><br>An excerpt from \"Language, Learning, Identity, Privilege\" by James Soriano. The Philippine Daily Inquirer, September 10, 2011.<br><br>When the author referred to Filipino as the other subject, most likely he meant that it is a _____.",
+        "choices": {
+            "A": "skills-based subject",
+            "B": "prestigious subject",
+            "C": "difficult subject",
+            "D": "minor subject"
+        },
+        "correct": "A"
+    },
+    "part1_20": {
+        "subject": "Verbal",
+        "stem": "(1) English is the language of learning. I've known this since before I could go to school. As a toddler, my first study materials were a set of flash cards that my mother used to teach me the English alphabet.<br><br>(2) My mother made home conducive to learning English: all my storybooks and coloring books were in English, and so were the cartoons I watched and the music I listened to. She required me to speak English at home. She even hired tutors to help me learn to read and write in English.<br><br>(3) In school I learned to think in English. We used English to learn about numbers, equations and variables. With it we learned about observation and inference, the moon and the stars, monsoons and photosynthesis. With it we learned about shapes and colors, about meter and rhythm. I learned about God in English, and I prayed to Him in English.<br><br>(4) Filipino, on the other hand, was always the 'other' subject \u2014 almost a special subject like PE or Home Economics, except that it was graded the same way as Science, Math, Religion, and English. My classmates and I used to complain about Filipino all the time. Filipino was a chore, like washing the dishes; it was not the language of learning. It was the language we used to speak to the people who washed our dishes.<br><br>(5) We used to think learning Filipino was important because it was practical: Filipino was the language of the world outside the classroom. It was the language of the streets: it was how you spoke to the tindera when you went to the tindahan, what you used to tell your katulong when you had an utos, and how you texted manong when you needed \"sundo na.\"<br><br>(6) That being said though, I was proud of my proficiency with the language. Filipino was the language I used to speak with my cousins and uncles and grandparents in the province, so I never had much trouble reciting.<br><br>(7) It was really only in university that I began to grasp Filipino in terms of language and not just dialect. Filipino was not merely a peculiar variety of language, derived and continuously borrowing from the English and Spanish alphabets; it has its own system, with its own grammar, semantics, sounds, even symbols.<br><br>(8) But more significantly, it has its own way of reading, writing, and thinking. There are ideas and concepts unique to Filipino that can never be translated into another. Try translating bayanihan, tagay, kilig or diskarte.<br><br>(9) Only recently have I begun to grasp Filipino as the language of identity: the language of emotion, experience, and even of learning. And with this comes the realization that I do, in fact, smell worse than a malansang isda. My own language is foreign to me: I speak, think, read and write primarily in English. To borrow the terminology of Fr. Bulatao, I am a split-level Filipino.<br><br>(10) It is neither the language of the classroom and the laboratory, nor the language of the boardroom, the court room, or the operating room. It is not the language of privilege. I may be disconnected from my being Filipino, but with a tongue of privilege I will always have my connections.<br><br>(11) So I have my education to thank for making English my mother language.<br><br>An excerpt from \"Language, Learning, Identity, Privilege\" by James Soriano. The Philippine Daily Inquirer, September 10, 2011.<br><br>What is the most likely reason why the author should thank his mother for making English his language of education?",
+        "choices": {
+            "A": "English gave him an elevated social status.",
+            "B": "Opportunities were opened to him because of his English proficiency.",
+            "C": "Learning English made him appreciate Filipino even more.",
+            "D": "Being good in English allowed him to meet several friends."
+        },
+        "correct": "B"
+    },
+    "part1_21": {
+        "subject": "Verbal",
+        "stem": "(1) English is the language of learning. I've known this since before I could go to school. As a toddler, my first study materials were a set of flash cards that my mother used to teach me the English alphabet.<br><br>(2) My mother made home conducive to learning English: all my storybooks and coloring books were in English, and so were the cartoons I watched and the music I listened to. She required me to speak English at home. She even hired tutors to help me learn to read and write in English.<br><br>(3) In school I learned to think in English. We used English to learn about numbers, equations and variables. With it we learned about observation and inference, the moon and the stars, monsoons and photosynthesis. With it we learned about shapes and colors, about meter and rhythm. I learned about God in English, and I prayed to Him in English.<br><br>(4) Filipino, on the other hand, was always the 'other' subject \u2014 almost a special subject like PE or Home Economics, except that it was graded the same way as Science, Math, Religion, and English. My classmates and I used to complain about Filipino all the time. Filipino was a chore, like washing the dishes; it was not the language of learning. It was the language we used to speak to the people who washed our dishes.<br><br>(5) We used to think learning Filipino was important because it was practical: Filipino was the language of the world outside the classroom. It was the language of the streets: it was how you spoke to the tindera when you went to the tindahan, what you used to tell your katulong when you had an utos, and how you texted manong when you needed \"sundo na.\"<br><br>(6) That being said though, I was proud of my proficiency with the language. Filipino was the language I used to speak with my cousins and uncles and grandparents in the province, so I never had much trouble reciting.<br><br>(7) It was really only in university that I began to grasp Filipino in terms of language and not just dialect. Filipino was not merely a peculiar variety of language, derived and continuously borrowing from the English and Spanish alphabets; it has its own system, with its own grammar, semantics, sounds, even symbols.<br><br>(8) But more significantly, it has its own way of reading, writing, and thinking. There are ideas and concepts unique to Filipino that can never be translated into another. Try translating bayanihan, tagay, kilig or diskarte.<br><br>(9) Only recently have I begun to grasp Filipino as the language of identity: the language of emotion, experience, and even of learning. And with this comes the realization that I do, in fact, smell worse than a malansang isda. My own language is foreign to me: I speak, think, read and write primarily in English. To borrow the terminology of Fr. Bulatao, I am a split-level Filipino.<br><br>(10) It is neither the language of the classroom and the laboratory, nor the language of the boardroom, the court room, or the operating room. It is not the language of privilege. I may be disconnected from my being Filipino, but with a tongue of privilege I will always have my connections.<br><br>(11) So I have my education to thank for making English my mother language.<br><br>An excerpt from \"Language, Learning, Identity, Privilege\" by James Soriano. The Philippine Daily Inquirer, September 10, 2011.<br><br>Which statement would the author most likely agree with?",
+        "choices": {
+            "A": "English is only for the social elites.",
+            "B": "English is vital to one's education.",
+            "C": "Filipino should be used more in the academe.",
+            "D": "Filipino should be removed from the curriculum."
+        },
+        "correct": "B"
+    },
+    "part1_22": {
+        "subject": "Verbal",
+        "stem": "(1) In the mid-1980s, the world became suddenly aware that the protective ozone shield in the atmosphere was in danger \u2013 was, in fact, greatly depleted in a huge \"hole\" over the frozen wastes of Antarctica. The mysterious stuff called ozone, which until then was known to the public chiefly as an acrid, lung-burning element of smog in overcrowded cities, was being destroyed in the stratosphere by chemicals made and released in the 20th century by humans.<br><br>(2) Ozone is a variant form of oxygen \u2013 the most life-sustaining gas of all. Under the intense ultraviolet bombardment from the sun at the upper reaches of the earth's atmosphere, normal two-atom molecules of oxygen are split into single atoms \u2013 O rather than O2, in chemists' terms. Some of these single-oxygen atoms rejoin with O2 to form ozone \u2013 O3. The amount in the stratosphere is very scant, less than ten parts per million (at sea level, the layer would be about as thick as a pane of window glass), but that layer is enough to stop most of the sun's most dangerous ultraviolet rays from reaching the earth's surface, 10 to 30 miles below.<br><br>(3) The possibility of ozone destruction by man-made chemicals had been predicted as early as 1974 by two farsighted researchers, F. Sherwood Rowland and Mario J. Molina, at the University of California at Irvine.<br><br>(4) Certain industrial gases dubbed as CFCs \u2013 chlorofluorocarbons \u2013 are so highly stable and inert that they do not react with other substances in nature. They have long been used as coolants in refrigerators and air conditioners, as propellants in aerosol cans, in making foam-plastic objects, such as coffee cups and fast-food containers, and as solvents for cleaning electronic circuit boards and computer chips. But there could be great danger, warned Rowland and Molina, when these same long-lived gases drift to the upper layers of the atmosphere.<br><br>(5) In that same region where ozone is created by solar bombardment, the CFCs could break apart, they postulated, freeing chlorine atoms that could attack and destroy ozone molecules by the billions. If these were to deplete the ozone layer around the whole world, it would put all mankind at risk.<br><br>An excerpt from \"National Geographic Learning Reader: Climate Change Printed Access Card\" by National Geographic Learning. Cengage Learning, 2012.<br><br>What is the author's manner of presenting the material in the selection?",
+        "choices": {
+            "A": "Practical",
+            "B": "Persuasive",
+            "C": "Informative",
+            "D": "Argumentative"
+        },
+        "correct": "C"
+    },
+    "part1_23": {
+        "subject": "Verbal",
+        "stem": "(1) In the mid-1980s, the world became suddenly aware that the protective ozone shield in the atmosphere was in danger \u2013 was, in fact, greatly depleted in a huge \"hole\" over the frozen wastes of Antarctica. The mysterious stuff called ozone, which until then was known to the public chiefly as an acrid, lung-burning element of smog in overcrowded cities, was being destroyed in the stratosphere by chemicals made and released in the 20th century by humans.<br><br>(2) Ozone is a variant form of oxygen \u2013 the most life-sustaining gas of all. Under the intense ultraviolet bombardment from the sun at the upper reaches of the earth's atmosphere, normal two-atom molecules of oxygen are split into single atoms \u2013 O rather than O2, in chemists' terms. Some of these single-oxygen atoms rejoin with O2 to form ozone \u2013 O3. The amount in the stratosphere is very scant, less than ten parts per million (at sea level, the layer would be about as thick as a pane of window glass), but that layer is enough to stop most of the sun's most dangerous ultraviolet rays from reaching the earth's surface, 10 to 30 miles below.<br><br>(3) The possibility of ozone destruction by man-made chemicals had been predicted as early as 1974 by two farsighted researchers, F. Sherwood Rowland and Mario J. Molina, at the University of California at Irvine.<br><br>(4) Certain industrial gases dubbed as CFCs \u2013 chlorofluorocarbons \u2013 are so highly stable and inert that they do not react with other substances in nature. They have long been used as coolants in refrigerators and air conditioners, as propellants in aerosol cans, in making foam-plastic objects, such as coffee cups and fast-food containers, and as solvents for cleaning electronic circuit boards and computer chips. But there could be great danger, warned Rowland and Molina, when these same long-lived gases drift to the upper layers of the atmosphere.<br><br>(5) In that same region where ozone is created by solar bombardment, the CFCs could break apart, they postulated, freeing chlorine atoms that could attack and destroy ozone molecules by the billions. If these were to deplete the ozone layer around the whole world, it would put all mankind at risk.<br><br>An excerpt from \"National Geographic Learning Reader: Climate Change Printed Access Card\" by National Geographic Learning. Cengage Learning, 2012.<br><br>What use has ozone on the environment?",
+        "choices": {
+            "A": "It provides protection from ultraviolet rays.",
+            "B": "It provides a shield against chlorofluorocarbons.",
+            "C": "It acts as deterrent to atmospheric changes.",
+            "D": "It provides the substance necessary in industrial operations."
+        },
+        "correct": "A"
+    },
+    "part1_24": {
+        "subject": "Verbal",
+        "stem": "(1) In the mid-1980s, the world became suddenly aware that the protective ozone shield in the atmosphere was in danger \u2013 was, in fact, greatly depleted in a huge \"hole\" over the frozen wastes of Antarctica. The mysterious stuff called ozone, which until then was known to the public chiefly as an acrid, lung-burning element of smog in overcrowded cities, was being destroyed in the stratosphere by chemicals made and released in the 20th century by humans.<br><br>(2) Ozone is a variant form of oxygen \u2013 the most life-sustaining gas of all. Under the intense ultraviolet bombardment from the sun at the upper reaches of the earth's atmosphere, normal two-atom molecules of oxygen are split into single atoms \u2013 O rather than O2, in chemists' terms. Some of these single-oxygen atoms rejoin with O2 to form ozone \u2013 O3. The amount in the stratosphere is very scant, less than ten parts per million (at sea level, the layer would be about as thick as a pane of window glass), but that layer is enough to stop most of the sun's most dangerous ultraviolet rays from reaching the earth's surface, 10 to 30 miles below.<br><br>(3) The possibility of ozone destruction by man-made chemicals had been predicted as early as 1974 by two farsighted researchers, F. Sherwood Rowland and Mario J. Molina, at the University of California at Irvine.<br><br>(4) Certain industrial gases dubbed as CFCs \u2013 chlorofluorocarbons \u2013 are so highly stable and inert that they do not react with other substances in nature. They have long been used as coolants in refrigerators and air conditioners, as propellants in aerosol cans, in making foam-plastic objects, such as coffee cups and fast-food containers, and as solvents for cleaning electronic circuit boards and computer chips. But there could be great danger, warned Rowland and Molina, when these same long-lived gases drift to the upper layers of the atmosphere.<br><br>(5) In that same region where ozone is created by solar bombardment, the CFCs could break apart, they postulated, freeing chlorine atoms that could attack and destroy ozone molecules by the billions. If these were to deplete the ozone layer around the whole world, it would put all mankind at risk.<br><br>An excerpt from \"National Geographic Learning Reader: Climate Change Printed Access Card\" by National Geographic Learning. Cengage Learning, 2012.<br><br>Why are CFCs used in industry?",
+        "choices": {
+            "A": "They prevent contamination of food and air.",
+            "B": "They easily dissolve in other substances to produce a cleaning agent.",
+            "C": "They are inert, stable, and easy to form.",
+            "D": "They are abundant in the atmosphere."
+        },
+        "correct": "C"
+    },
+    "part1_25": {
+        "subject": "Verbal",
+        "stem": "(1) In the mid-1980s, the world became suddenly aware that the protective ozone shield in the atmosphere was in danger \u2013 was, in fact, greatly depleted in a huge \"hole\" over the frozen wastes of Antarctica. The mysterious stuff called ozone, which until then was known to the public chiefly as an acrid, lung-burning element of smog in overcrowded cities, was being destroyed in the stratosphere by chemicals made and released in the 20th century by humans.<br><br>(2) Ozone is a variant form of oxygen \u2013 the most life-sustaining gas of all. Under the intense ultraviolet bombardment from the sun at the upper reaches of the earth's atmosphere, normal two-atom molecules of oxygen are split into single atoms \u2013 O rather than O2, in chemists' terms. Some of these single-oxygen atoms rejoin with O2 to form ozone \u2013 O3. The amount in the stratosphere is very scant, less than ten parts per million (at sea level, the layer would be about as thick as a pane of window glass), but that layer is enough to stop most of the sun's most dangerous ultraviolet rays from reaching the earth's surface, 10 to 30 miles below.<br><br>(3) The possibility of ozone destruction by man-made chemicals had been predicted as early as 1974 by two farsighted researchers, F. Sherwood Rowland and Mario J. Molina, at the University of California at Irvine.<br><br>(4) Certain industrial gases dubbed as CFCs \u2013 chlorofluorocarbons \u2013 are so highly stable and inert that they do not react with other substances in nature. They have long been used as coolants in refrigerators and air conditioners, as propellants in aerosol cans, in making foam-plastic objects, such as coffee cups and fast-food containers, and as solvents for cleaning electronic circuit boards and computer chips. But there could be great danger, warned Rowland and Molina, when these same long-lived gases drift to the upper layers of the atmosphere.<br><br>(5) In that same region where ozone is created by solar bombardment, the CFCs could break apart, they postulated, freeing chlorine atoms that could attack and destroy ozone molecules by the billions. If these were to deplete the ozone layer around the whole world, it would put all mankind at risk.<br><br>An excerpt from \"National Geographic Learning Reader: Climate Change Printed Access Card\" by National Geographic Learning. Cengage Learning, 2012.<br><br>Which of the following titles is most appropriate for the selection?",
+        "choices": {
+            "A": "The Risk of the Ozone Layer",
+            "B": "The Hazards Mankind Faces",
+            "C": "The Dangers of Ozone Formation",
+            "D": "The Problem About Ozone Depletion"
+        },
+        "correct": "A"
+    },
+    "part1_26": {
+        "subject": "Verbal",
+        "stem": "(1) I was born in a log cabin on a winter. The first thing I remember is being grateful for windows. I was three years old. My mother had set me to play on a mattress carefully placed in the one ray of sunlight streaming through the one glass window of our log cabin. Baby as I was, I had ached in the agonizing cold of a pioneer winter. Lying there, warmed by that blessed sunshine, I was suddenly aware of wonder and joy and gratitude. It was gratitude for glass, which could keep out the biting cold and let in the warm sun...<br><br>(2) My father came from a family of school teachers in New England. My mother was the daughter of a hardworking Scotch immigrant. Father's family set store on ancestry. Mother's side was more practical...<br><br>(3) The year before my birth, these two young people had started West in a prairie schooner to stake a homestead claim...<br><br>(4) After mother's eighth and last baby, she lay ill for a year. The care of the children fell principally on my young shoulders. One day I found her crying.<br><br>(5) \"Mary,\" she said, with a tenderness that was rare, \"If I die, you must take care of all your brothers and sisters. You will be the only woman within eighteen miles.\"<br><br>(6) I was ten years old.<br><br>(7) That night and many other nights I lay awake, trembling at the possibility of being left the only woman within eighteen miles.<br><br>(8) But mother did not die. I must have been a sturdy child, for, with the little help father and his homestead partner could spare, I kept that home going until she was strong again...<br><br>(9) Every fall, the shoemaker made his rounds through the country, reaching our place last, for beyond us lay only untamed forest and wild beasts. His visit thrilled us more than the arrival of any king today. We had been cut off from the world for months. The shoemaker brought news from neighbors eighteen, forty, sixty, even a hundred and fifty miles away. Usually he brought a few newspapers too, treasured afterward for months. He remained a royal guest, for many days, until all the family was shod...<br><br>(10) By the time I was fourteen, three tremendous events had marked my life: sunlight through a windowpane, the log-rolling on the river when father added two rooms to our cabin, and the night I thought mother would die and leave me the only woman within eighteen miles...<br><br>(11) But there was a fourth event that was the most tremendous. One night father handed my mother a letter. Our Great-Aunt Martha had willed her father household goods and personal belongings and a modest sum that to us was a fortune. Someone back East \"awaited his instructions.\" Many discussions followed, but in the end my mother gained her way. Great-Aunt Martha's household goods were sold at auction. Father, however, insisted that her \"personal belongings\" be shipped to us.<br><br>(12) After a long, long wait, one day a trunk and two packing cases came. It was a solemn moment when the first box was opened. Then mother gave a cry of delight. Sheets and bedspreads edged with lace! Real linen pillowcases with crocheted edgings. Soft woolen blankets and bright handmade quilts. Two heavy, lustrous tablecloths and two dozen napkins, one white and hemmed, and one red-and-white, bordered with a soft fringe.<br><br>(13) What the world calls wealth has come to me in years. Nothing ever equaled in my eyes the priceless value of Great-Aunt Martha's \"personal belongings.\"<br><br>(14) I was in a seventh heaven of delight. My father picked up the books and began to read, paying no attention to our exclamations over dresses and ribbons, the boxful of laces, or the little shell-covered case holding a few ornaments in gold and silver and jet. Then I picked up a napkin.<br><br>(15) \"What are these for?\" I asked curiously.<br><br>(16) My father slammed his book shut. I had never seen such a look on his face.<br><br>(17) \"How old are you, Mary?\" he demanded suddenly.<br><br>(18) I told him that I was going on fifteen.<br><br>(19) \"And you never saw a table napkin?\"<br><br>(20) His tone was bitter and accusing. I didn't understand\u2014how could I?<br><br>(21) Father began to talk, his words growing more and more bitter. Mother defended herself hotly. Today, I know that justice was on her side. But in that first adolescent self-consciousness, my sympathies were all with Father.<br><br>(22) Mother had neglected us\u2014she had not taught us to use table napkins! People in history used them.<br><br>(23) From that time on, we used napkins and a tablecloth on Sundays.<br><br>An excerpt from \"The Log-Cabin Lady: An Anonymous Autobiography\" by Marie Mattingly Meloney<br><br>What was the proof that Mary was a healthy ten-year old?",
+        "choices": {
+            "A": "She learned to hunt for food.",
+            "B": "She never got sick in spite of the hardships.",
+            "C": "She helped her father cut the logs for their cabin.",
+            "D": "She ran the household when her mother was sick."
+        },
+        "correct": "D"
+    },
+    "part1_27": {
+        "subject": "Verbal",
+        "stem": "(1) I was born in a log cabin on a winter. The first thing I remember is being grateful for windows. I was three years old. My mother had set me to play on a mattress carefully placed in the one ray of sunlight streaming through the one glass window of our log cabin. Baby as I was, I had ached in the agonizing cold of a pioneer winter. Lying there, warmed by that blessed sunshine, I was suddenly aware of wonder and joy and gratitude. It was gratitude for glass, which could keep out the biting cold and let in the warm sun...<br><br>(2) My father came from a family of school teachers in New England. My mother was the daughter of a hardworking Scotch immigrant. Father's family set store on ancestry. Mother's side was more practical...<br><br>(3) The year before my birth, these two young people had started West in a prairie schooner to stake a homestead claim...<br><br>(4) After mother's eighth and last baby, she lay ill for a year. The care of the children fell principally on my young shoulders. One day I found her crying.<br><br>(5) \"Mary,\" she said, with a tenderness that was rare, \"If I die, you must take care of all your brothers and sisters. You will be the only woman within eighteen miles.\"<br><br>(6) I was ten years old.<br><br>(7) That night and many other nights I lay awake, trembling at the possibility of being left the only woman within eighteen miles.<br><br>(8) But mother did not die. I must have been a sturdy child, for, with the little help father and his homestead partner could spare, I kept that home going until she was strong again...<br><br>(9) Every fall, the shoemaker made his rounds through the country, reaching our place last, for beyond us lay only untamed forest and wild beasts. His visit thrilled us more than the arrival of any king today. We had been cut off from the world for months. The shoemaker brought news from neighbors eighteen, forty, sixty, even a hundred and fifty miles away. Usually he brought a few newspapers too, treasured afterward for months. He remained a royal guest, for many days, until all the family was shod...<br><br>(10) By the time I was fourteen, three tremendous events had marked my life: sunlight through a windowpane, the log-rolling on the river when father added two rooms to our cabin, and the night I thought mother would die and leave me the only woman within eighteen miles...<br><br>(11) But there was a fourth event that was the most tremendous. One night father handed my mother a letter. Our Great-Aunt Martha had willed her father household goods and personal belongings and a modest sum that to us was a fortune. Someone back East \"awaited his instructions.\" Many discussions followed, but in the end my mother gained her way. Great-Aunt Martha's household goods were sold at auction. Father, however, insisted that her \"personal belongings\" be shipped to us.<br><br>(12) After a long, long wait, one day a trunk and two packing cases came. It was a solemn moment when the first box was opened. Then mother gave a cry of delight. Sheets and bedspreads edged with lace! Real linen pillowcases with crocheted edgings. Soft woolen blankets and bright handmade quilts. Two heavy, lustrous tablecloths and two dozen napkins, one white and hemmed, and one red-and-white, bordered with a soft fringe.<br><br>(13) What the world calls wealth has come to me in years. Nothing ever equaled in my eyes the priceless value of Great-Aunt Martha's \"personal belongings.\"<br><br>(14) I was in a seventh heaven of delight. My father picked up the books and began to read, paying no attention to our exclamations over dresses and ribbons, the boxful of laces, or the little shell-covered case holding a few ornaments in gold and silver and jet. Then I picked up a napkin.<br><br>(15) \"What are these for?\" I asked curiously.<br><br>(16) My father slammed his book shut. I had never seen such a look on his face.<br><br>(17) \"How old are you, Mary?\" he demanded suddenly.<br><br>(18) I told him that I was going on fifteen.<br><br>(19) \"And you never saw a table napkin?\"<br><br>(20) His tone was bitter and accusing. I didn't understand\u2014how could I?<br><br>(21) Father began to talk, his words growing more and more bitter. Mother defended herself hotly. Today, I know that justice was on her side. But in that first adolescent self-consciousness, my sympathies were all with Father.<br><br>(22) Mother had neglected us\u2014she had not taught us to use table napkins! People in history used them.<br><br>(23) From that time on, we used napkins and a tablecloth on Sundays.<br><br>An excerpt from \"The Log-Cabin Lady: An Anonymous Autobiography\" by Marie Mattingly Meloney<br><br>What experience made the greatest impact on Mary's life?",
+        "choices": {
+            "A": "Rolling logs on the river with her father",
+            "B": "The fear of being orphaned by her mother",
+            "C": "Inheriting their great-aunt's personal belongings",
+            "D": "The warmth of sunlight streaming through the glass window"
+        },
+        "correct": "C"
+    },
+    "part1_28": {
+        "subject": "Verbal",
+        "stem": "(1) I was born in a log cabin on a winter. The first thing I remember is being grateful for windows. I was three years old. My mother had set me to play on a mattress carefully placed in the one ray of sunlight streaming through the one glass window of our log cabin. Baby as I was, I had ached in the agonizing cold of a pioneer winter. Lying there, warmed by that blessed sunshine, I was suddenly aware of wonder and joy and gratitude. It was gratitude for glass, which could keep out the biting cold and let in the warm sun...<br><br>(2) My father came from a family of school teachers in New England. My mother was the daughter of a hardworking Scotch immigrant. Father's family set store on ancestry. Mother's side was more practical...<br><br>(3) The year before my birth, these two young people had started West in a prairie schooner to stake a homestead claim...<br><br>(4) After mother's eighth and last baby, she lay ill for a year. The care of the children fell principally on my young shoulders. One day I found her crying.<br><br>(5) \"Mary,\" she said, with a tenderness that was rare, \"If I die, you must take care of all your brothers and sisters. You will be the only woman within eighteen miles.\"<br><br>(6) I was ten years old.<br><br>(7) That night and many other nights I lay awake, trembling at the possibility of being left the only woman within eighteen miles.<br><br>(8) But mother did not die. I must have been a sturdy child, for, with the little help father and his homestead partner could spare, I kept that home going until she was strong again...<br><br>(9) Every fall, the shoemaker made his rounds through the country, reaching our place last, for beyond us lay only untamed forest and wild beasts. His visit thrilled us more than the arrival of any king today. We had been cut off from the world for months. The shoemaker brought news from neighbors eighteen, forty, sixty, even a hundred and fifty miles away. Usually he brought a few newspapers too, treasured afterward for months. He remained a royal guest, for many days, until all the family was shod...<br><br>(10) By the time I was fourteen, three tremendous events had marked my life: sunlight through a windowpane, the log-rolling on the river when father added two rooms to our cabin, and the night I thought mother would die and leave me the only woman within eighteen miles...<br><br>(11) But there was a fourth event that was the most tremendous. One night father handed my mother a letter. Our Great-Aunt Martha had willed her father household goods and personal belongings and a modest sum that to us was a fortune. Someone back East \"awaited his instructions.\" Many discussions followed, but in the end my mother gained her way. Great-Aunt Martha's household goods were sold at auction. Father, however, insisted that her \"personal belongings\" be shipped to us.<br><br>(12) After a long, long wait, one day a trunk and two packing cases came. It was a solemn moment when the first box was opened. Then mother gave a cry of delight. Sheets and bedspreads edged with lace! Real linen pillowcases with crocheted edgings. Soft woolen blankets and bright handmade quilts. Two heavy, lustrous tablecloths and two dozen napkins, one white and hemmed, and one red-and-white, bordered with a soft fringe.<br><br>(13) What the world calls wealth has come to me in years. Nothing ever equaled in my eyes the priceless value of Great-Aunt Martha's \"personal belongings.\"<br><br>(14) I was in a seventh heaven of delight. My father picked up the books and began to read, paying no attention to our exclamations over dresses and ribbons, the boxful of laces, or the little shell-covered case holding a few ornaments in gold and silver and jet. Then I picked up a napkin.<br><br>(15) \"What are these for?\" I asked curiously.<br><br>(16) My father slammed his book shut. I had never seen such a look on his face.<br><br>(17) \"How old are you, Mary?\" he demanded suddenly.<br><br>(18) I told him that I was going on fifteen.<br><br>(19) \"And you never saw a table napkin?\"<br><br>(20) His tone was bitter and accusing. I didn't understand\u2014how could I?<br><br>(21) Father began to talk, his words growing more and more bitter. Mother defended herself hotly. Today, I know that justice was on her side. But in that first adolescent self-consciousness, my sympathies were all with Father.<br><br>(22) Mother had neglected us\u2014she had not taught us to use table napkins! People in history used them.<br><br>(23) From that time on, we used napkins and a tablecloth on Sundays.<br><br>An excerpt from \"The Log-Cabin Lady: An Anonymous Autobiography\" by Marie Mattingly Meloney<br><br>What does the underlined statement in paragraph 9 mean?",
+        "choices": {
+            "A": "He was a giver of gifts.",
+            "B": "He was a loyal subject of the king.",
+            "C": "He received the best treatment from the people.",
+            "D": "He was known to everybody in the community."
+        },
+        "correct": "C"
+    },
+    "part1_29": {
+        "subject": "Verbal",
+        "stem": "(1) I was born in a log cabin on a winter. The first thing I remember is being grateful for windows. I was three years old. My mother had set me to play on a mattress carefully placed in the one ray of sunlight streaming through the one glass window of our log cabin. Baby as I was, I had ached in the agonizing cold of a pioneer winter. Lying there, warmed by that blessed sunshine, I was suddenly aware of wonder and joy and gratitude. It was gratitude for glass, which could keep out the biting cold and let in the warm sun...<br><br>(2) My father came from a family of school teachers in New England. My mother was the daughter of a hardworking Scotch immigrant. Father's family set store on ancestry. Mother's side was more practical...<br><br>(3) The year before my birth, these two young people had started West in a prairie schooner to stake a homestead claim...<br><br>(4) After mother's eighth and last baby, she lay ill for a year. The care of the children fell principally on my young shoulders. One day I found her crying.<br><br>(5) \"Mary,\" she said, with a tenderness that was rare, \"If I die, you must take care of all your brothers and sisters. You will be the only woman within eighteen miles.\"<br><br>(6) I was ten years old.<br><br>(7) That night and many other nights I lay awake, trembling at the possibility of being left the only woman within eighteen miles.<br><br>(8) But mother did not die. I must have been a sturdy child, for, with the little help father and his homestead partner could spare, I kept that home going until she was strong again...<br><br>(9) Every fall, the shoemaker made his rounds through the country, reaching our place last, for beyond us lay only untamed forest and wild beasts. His visit thrilled us more than the arrival of any king today. We had been cut off from the world for months. The shoemaker brought news from neighbors eighteen, forty, sixty, even a hundred and fifty miles away. Usually he brought a few newspapers too, treasured afterward for months. He remained a royal guest, for many days, until all the family was shod...<br><br>(10) By the time I was fourteen, three tremendous events had marked my life: sunlight through a windowpane, the log-rolling on the river when father added two rooms to our cabin, and the night I thought mother would die and leave me the only woman within eighteen miles...<br><br>(11) But there was a fourth event that was the most tremendous. One night father handed my mother a letter. Our Great-Aunt Martha had willed her father household goods and personal belongings and a modest sum that to us was a fortune. Someone back East \"awaited his instructions.\" Many discussions followed, but in the end my mother gained her way. Great-Aunt Martha's household goods were sold at auction. Father, however, insisted that her \"personal belongings\" be shipped to us.<br><br>(12) After a long, long wait, one day a trunk and two packing cases came. It was a solemn moment when the first box was opened. Then mother gave a cry of delight. Sheets and bedspreads edged with lace! Real linen pillowcases with crocheted edgings. Soft woolen blankets and bright handmade quilts. Two heavy, lustrous tablecloths and two dozen napkins, one white and hemmed, and one red-and-white, bordered with a soft fringe.<br><br>(13) What the world calls wealth has come to me in years. Nothing ever equaled in my eyes the priceless value of Great-Aunt Martha's \"personal belongings.\"<br><br>(14) I was in a seventh heaven of delight. My father picked up the books and began to read, paying no attention to our exclamations over dresses and ribbons, the boxful of laces, or the little shell-covered case holding a few ornaments in gold and silver and jet. Then I picked up a napkin.<br><br>(15) \"What are these for?\" I asked curiously.<br><br>(16) My father slammed his book shut. I had never seen such a look on his face.<br><br>(17) \"How old are you, Mary?\" he demanded suddenly.<br><br>(18) I told him that I was going on fifteen.<br><br>(19) \"And you never saw a table napkin?\"<br><br>(20) His tone was bitter and accusing. I didn't understand\u2014how could I?<br><br>(21) Father began to talk, his words growing more and more bitter. Mother defended herself hotly. Today, I know that justice was on her side. But in that first adolescent self-consciousness, my sympathies were all with Father.<br><br>(22) Mother had neglected us\u2014she had not taught us to use table napkins! People in history used them.<br><br>(23) From that time on, we used napkins and a tablecloth on Sundays.<br><br>An excerpt from \"The Log-Cabin Lady: An Anonymous Autobiography\" by Marie Mattingly Meloney<br><br>What triggered the bitter argument between husband and wife?",
+        "choices": {
+            "A": "The wife's decision to sell great-aunt Martha's household goods",
+            "B": "The wife's insistence on using table napkins only on Sundays",
+            "C": "The realization that the children did not have table manners",
+            "D": "The wife's failure to teach her children table manners"
+        },
+        "correct": "D"
+    },
+    "part1_30": {
+        "subject": "Verbal",
+        "stem": "(1) Sean sighed as he leaned his head back against the tree. The good ones always left him with this amalgamation of thoughts and feelings, this clash of excitement and longing with the realization of routine and boredom.<br><br>(2) He closed his eyes and listened to the water in the stream and rustle of the leaves. He felt the warmth on his bare feet where they encountered the light at the edge of the shade. This is why he came to the park to read. The solitary quiet made the transition back to reality somewhat more bearable.<br><br>(3) It had been this way ever since he first realized the marks on the page conveyed meaning, created worlds that couldn't be seen with his eyes. Thomas, Winnie and Piglet, Max; they took him with them. Taught him loyalty, goodness, and perseverance. Let him step into their worlds and wonder if he could ever be so daring, or humble, or wise. Then, as he grew, he rafted down the Mississippi with Tom and Huck, ate hotroot soup at Redwall Abbey, climbed Mount Doom with Frodo and Sam, and fought chaos with Pendragon and Lord Foul with Foam follower and Bannor. Then he had discovered that heroes were not always make believe. He circumnavigated the earth, climbed Mount Everest, and explored the South Pole with real people.<br><br>(4) But he was born too late for that type of real-life adventure. Everything was charted and analyzed. Plus, he was stuck here in this remote corner of the universe where life dribbled by in a monotonous, mind-numbing rhythm. Digging minerals out of the ground day after day. Mom and Dad said they were a \"tight knit community\". He longed for a new face, a new horizon. He had never seen an ocean or mountain with his own eyes. He had never been more than 110 kilometers from this little nowhere where he was born. He wanted to go, he wanted to do and be! Adventure, excitement, heroic deeds were what he was made for. If only he could have been born 500, 200, or even 50 years ago. Then he would have lived a life worth living. Then he would not have to live with this constant ache and yearning.<br><br>(5) He felt it first as a deep, bone resonating vibration that was far below the frequency his ears could discern. The vibration increased until the leaves were dancing in the limbs above him and he could hear the deep rumble as it climbed up the octaves. He glanced up just in time to see the stars beyond the park's observation strips occluded by a blunt, massive object as it hurtled past. He glanced at his comp pad. Exactly what he had been thinking. Five ten on the dot and another 210 metric tons on its way in-system to the Goslar refinery station. The same thing three times a day, every day. His eyes strayed toward the brightest star, the Sun. Somewhere in that general direction was Earth, where it started, birthplace of the human race. Oh, to be free to walk under open sky, to have a whole world to discover.<br><br>An excerpt from Otte, N. (2018). Born Too Late. 365 tomorrows.<br><br>Which of the following descriptions does NOT illustrate the park where Sean stayed?",
+        "choices": {
+            "A": "The rustling leaves can be heard.",
+            "B": "The sunlight was touching Sean's bare feet.",
+            "C": "The sound of the flowing stream is soothing.",
+            "D": "The noise of the children playing brings happiness."
+        },
+        "correct": "D"
+    },
+    "part1_31": {
+        "subject": "Verbal",
+        "stem": "(1) Sean sighed as he leaned his head back against the tree. The good ones always left him with this amalgamation of thoughts and feelings, this clash of excitement and longing with the realization of routine and boredom.<br><br>(2) He closed his eyes and listened to the water in the stream and rustle of the leaves. He felt the warmth on his bare feet where they encountered the light at the edge of the shade. This is why he came to the park to read. The solitary quiet made the transition back to reality somewhat more bearable.<br><br>(3) It had been this way ever since he first realized the marks on the page conveyed meaning, created worlds that couldn't be seen with his eyes. Thomas, Winnie and Piglet, Max; they took him with them. Taught him loyalty, goodness, and perseverance. Let him step into their worlds and wonder if he could ever be so daring, or humble, or wise. Then, as he grew, he rafted down the Mississippi with Tom and Huck, ate hotroot soup at Redwall Abbey, climbed Mount Doom with Frodo and Sam, and fought chaos with Pendragon and Lord Foul with Foam follower and Bannor. Then he had discovered that heroes were not always make believe. He circumnavigated the earth, climbed Mount Everest, and explored the South Pole with real people.<br><br>(4) But he was born too late for that type of real-life adventure. Everything was charted and analyzed. Plus, he was stuck here in this remote corner of the universe where life dribbled by in a monotonous, mind-numbing rhythm. Digging minerals out of the ground day after day. Mom and Dad said they were a \"tight knit community\". He longed for a new face, a new horizon. He had never seen an ocean or mountain with his own eyes. He had never been more than 110 kilometers from this little nowhere where he was born. He wanted to go, he wanted to do and be! Adventure, excitement, heroic deeds were what he was made for. If only he could have been born 500, 200, or even 50 years ago. Then he would have lived a life worth living. Then he would not have to live with this constant ache and yearning.<br><br>(5) He felt it first as a deep, bone resonating vibration that was far below the frequency his ears could discern. The vibration increased until the leaves were dancing in the limbs above him and he could hear the deep rumble as it climbed up the octaves. He glanced up just in time to see the stars beyond the park's observation strips occluded by a blunt, massive object as it hurtled past. He glanced at his comp pad. Exactly what he had been thinking. Five ten on the dot and another 210 metric tons on its way in-system to the Goslar refinery station. The same thing three times a day, every day. His eyes strayed toward the brightest star, the Sun. Somewhere in that general direction was Earth, where it started, birthplace of the human race. Oh, to be free to walk under open sky, to have a whole world to discover.<br><br>An excerpt from Otte, N. (2018). Born Too Late. 365 tomorrows.<br><br>Why does Sean prefer to go to the park to read?",
+        "choices": {
+            "A": "He thinks of running away from his family.",
+            "B": "He sets his fantasies in the park where he stays.",
+            "C": "The serene location helps in transporting his imagination.",
+            "D": "There are other things to do at the park when he gets bored reading."
+        },
+        "correct": "C"
+    },
+    "part1_32": {
+        "subject": "Verbal",
+        "stem": "(1) Sean sighed as he leaned his head back against the tree. The good ones always left him with this amalgamation of thoughts and feelings, this clash of excitement and longing with the realization of routine and boredom.<br><br>(2) He closed his eyes and listened to the water in the stream and rustle of the leaves. He felt the warmth on his bare feet where they encountered the light at the edge of the shade. This is why he came to the park to read. The solitary quiet made the transition back to reality somewhat more bearable.<br><br>(3) It had been this way ever since he first realized the marks on the page conveyed meaning, created worlds that couldn't be seen with his eyes. Thomas, Winnie and Piglet, Max; they took him with them. Taught him loyalty, goodness, and perseverance. Let him step into their worlds and wonder if he could ever be so daring, or humble, or wise. Then, as he grew, he rafted down the Mississippi with Tom and Huck, ate hotroot soup at Redwall Abbey, climbed Mount Doom with Frodo and Sam, and fought chaos with Pendragon and Lord Foul with Foam follower and Bannor. Then he had discovered that heroes were not always make believe. He circumnavigated the earth, climbed Mount Everest, and explored the South Pole with real people.<br><br>(4) But he was born too late for that type of real-life adventure. Everything was charted and analyzed. Plus, he was stuck here in this remote corner of the universe where life dribbled by in a monotonous, mind-numbing rhythm. Digging minerals out of the ground day after day. Mom and Dad said they were a \"tight knit community\". He longed for a new face, a new horizon. He had never seen an ocean or mountain with his own eyes. He had never been more than 110 kilometers from this little nowhere where he was born. He wanted to go, he wanted to do and be! Adventure, excitement, heroic deeds were what he was made for. If only he could have been born 500, 200, or even 50 years ago. Then he would have lived a life worth living. Then he would not have to live with this constant ache and yearning.<br><br>(5) He felt it first as a deep, bone resonating vibration that was far below the frequency his ears could discern. The vibration increased until the leaves were dancing in the limbs above him and he could hear the deep rumble as it climbed up the octaves. He glanced up just in time to see the stars beyond the park's observation strips occluded by a blunt, massive object as it hurtled past. He glanced at his comp pad. Exactly what he had been thinking. Five ten on the dot and another 210 metric tons on its way in-system to the Goslar refinery station. The same thing three times a day, every day. His eyes strayed toward the brightest star, the Sun. Somewhere in that general direction was Earth, where it started, birthplace of the human race. Oh, to be free to walk under open sky, to have a whole world to discover.<br><br>An excerpt from Otte, N. (2018). Born Too Late. 365 tomorrows.<br><br>Based on the story's premises, how would Sean most likely feel when he finally visits Earth?",
+        "choices": {
+            "A": "Disappointed",
+            "B": "Nonchalant",
+            "C": "Fulfilled",
+            "D": "Ecstatic"
+        },
+        "correct": "A"
+    },
+    "part1_33": {
+        "subject": "Verbal",
+        "stem": "(1) Sean sighed as he leaned his head back against the tree. The good ones always left him with this amalgamation of thoughts and feelings, this clash of excitement and longing with the realization of routine and boredom.<br><br>(2) He closed his eyes and listened to the water in the stream and rustle of the leaves. He felt the warmth on his bare feet where they encountered the light at the edge of the shade. This is why he came to the park to read. The solitary quiet made the transition back to reality somewhat more bearable.<br><br>(3) It had been this way ever since he first realized the marks on the page conveyed meaning, created worlds that couldn't be seen with his eyes. Thomas, Winnie and Piglet, Max; they took him with them. Taught him loyalty, goodness, and perseverance. Let him step into their worlds and wonder if he could ever be so daring, or humble, or wise. Then, as he grew, he rafted down the Mississippi with Tom and Huck, ate hotroot soup at Redwall Abbey, climbed Mount Doom with Frodo and Sam, and fought chaos with Pendragon and Lord Foul with Foam follower and Bannor. Then he had discovered that heroes were not always make believe. He circumnavigated the earth, climbed Mount Everest, and explored the South Pole with real people.<br><br>(4) But he was born too late for that type of real-life adventure. Everything was charted and analyzed. Plus, he was stuck here in this remote corner of the universe where life dribbled by in a monotonous, mind-numbing rhythm. Digging minerals out of the ground day after day. Mom and Dad said they were a \"tight knit community\". He longed for a new face, a new horizon. He had never seen an ocean or mountain with his own eyes. He had never been more than 110 kilometers from this little nowhere where he was born. He wanted to go, he wanted to do and be! Adventure, excitement, heroic deeds were what he was made for. If only he could have been born 500, 200, or even 50 years ago. Then he would have lived a life worth living. Then he would not have to live with this constant ache and yearning.<br><br>(5) He felt it first as a deep, bone resonating vibration that was far below the frequency his ears could discern. The vibration increased until the leaves were dancing in the limbs above him and he could hear the deep rumble as it climbed up the octaves. He glanced up just in time to see the stars beyond the park's observation strips occluded by a blunt, massive object as it hurtled past. He glanced at his comp pad. Exactly what he had been thinking. Five ten on the dot and another 210 metric tons on its way in-system to the Goslar refinery station. The same thing three times a day, every day. His eyes strayed toward the brightest star, the Sun. Somewhere in that general direction was Earth, where it started, birthplace of the human race. Oh, to be free to walk under open sky, to have a whole world to discover.<br><br>An excerpt from Otte, N. (2018). Born Too Late. 365 tomorrows.<br><br>Which of the following best expresses the theme of the passage?",
+        "choices": {
+            "A": "Books can take our imaginations to far-flung places.",
+            "B": "It is almost impossible to recover what was once lost.",
+            "C": "Amazement engulfs us when we look at the heavens.",
+            "D": "People need to cope with the drudgery of everyday life."
+        },
+        "correct": "B"
+    },
+    "part1_34": {
+        "subject": "Verbal",
+        "stem": "(2) The pain of loss...<br><br>(3) Now I can say with certainty that I had never understood others suffering from unbearable loss of a dear person. For my part, it used to be pity, compassion. When this happened to me, when my dear mother died, I started to understand all those people who lost someone they loved. There are perhaps no proper words to describe this intolerable pain which tears you apart, which is like a stone on your heart, and which make tears run down your face with each recollection of the dear person that passed away. Time is unlikely to alleviate this hurt, no matter what others claim.<br><br>(4) The memory of my mother will follow me wherever I go, and however far my dreams with a gentle scent of rosemary and the shimmering silver of her laugh. My mother had a serene charisma and a soothing aura around her. She was there to show me my first butterfly and my first rain. She was there when I made my first steps. She taught me to smile and laugh.<br><br>(5) Moreover, my mother listened to all my fears and apprehensions with a gentle patience, which can only be admired. She covered my winters of self-doubt and self-hate with such warm and tender blankets of caring love. Her eyes were so soft, wandering, and full of comprehension when they focused on other people. My mother's greatest desire was only to cherish, protect, and lavish affection and care for her family. When I had really bad times, she washed me with her healing sympathy and distracted me with her brilliant humor. My mother was the only person I could really rely on.<br><br>(6) No one has ever loved me the way she did. My mother was my sole support system, whenever something exciting happened or there was a crisis in my life, she was the first person I turned to. She understood me better than anyone else I knew. I miss our talks, her support, advices, care.<br><br>(7) When my family and I found out she had cancer, I was really distraught. It was a life changing moment. I tried to do my best to support my mother as soon as I got to know that she was incurably ill. I started doing more around the house (washing dishes, cooking for my mom, etc.), so that she could rest. Apart from that, I tried to find out as much as possible about the breast cancer, still hoping that something could be done to make her healthy again. Till the day she finally passed away I had a hope that everything would turn out to be fine.<br><br>(8) These days I try hard not to think about the past and focus on my future. Although my pain is still as immense as on the day of my mom's death, now I clearly see what I have to do to go on living. I must not stay on my own, with all my depressive thoughts. I will have to take up any activity \u2013 start yoga, read books, play computer games, do sports. It is also worth using my time and energy for helping other people. Helping others will give a meaning to my life, and I will have less time to plunge into the abyss of despair. To stride over grief. Without forgetting the person that meant so much in your life.<br><br>Excerpt from \"The Most Significant Person In My Life\" from http://www.custom-essays.org/examples/My_Mother_Narrative_Essay.html<br><br>\"She covered my winters of self-doubt and self-hate with such warm and tender blankets of caring love\" means that her mother _____.",
+        "choices": {
+            "A": "has also self-doubt and self-hate sometimes",
+            "B": "accepts and understands her limitations as a person",
+            "C": "is always vigilant of her self-doubt and self-hate",
+            "D": "thinks that she is a person doubting herself"
+        },
+        "correct": "B"
+    },
+    "part1_35": {
+        "subject": "Verbal",
+        "stem": "(2) The pain of loss...<br><br>(3) Now I can say with certainty that I had never understood others suffering from unbearable loss of a dear person. For my part, it used to be pity, compassion. When this happened to me, when my dear mother died, I started to understand all those people who lost someone they loved. There are perhaps no proper words to describe this intolerable pain which tears you apart, which is like a stone on your heart, and which make tears run down your face with each recollection of the dear person that passed away. Time is unlikely to alleviate this hurt, no matter what others claim.<br><br>(4) The memory of my mother will follow me wherever I go, and however far my dreams with a gentle scent of rosemary and the shimmering silver of her laugh. My mother had a serene charisma and a soothing aura around her. She was there to show me my first butterfly and my first rain. She was there when I made my first steps. She taught me to smile and laugh.<br><br>(5) Moreover, my mother listened to all my fears and apprehensions with a gentle patience, which can only be admired. She covered my winters of self-doubt and self-hate with such warm and tender blankets of caring love. Her eyes were so soft, wandering, and full of comprehension when they focused on other people. My mother's greatest desire was only to cherish, protect, and lavish affection and care for her family. When I had really bad times, she washed me with her healing sympathy and distracted me with her brilliant humor. My mother was the only person I could really rely on.<br><br>(6) No one has ever loved me the way she did. My mother was my sole support system, whenever something exciting happened or there was a crisis in my life, she was the first person I turned to. She understood me better than anyone else I knew. I miss our talks, her support, advices, care.<br><br>(7) When my family and I found out she had cancer, I was really distraught. It was a life changing moment. I tried to do my best to support my mother as soon as I got to know that she was incurably ill. I started doing more around the house (washing dishes, cooking for my mom, etc.), so that she could rest. Apart from that, I tried to find out as much as possible about the breast cancer, still hoping that something could be done to make her healthy again. Till the day she finally passed away I had a hope that everything would turn out to be fine.<br><br>(8) These days I try hard not to think about the past and focus on my future. Although my pain is still as immense as on the day of my mom's death, now I clearly see what I have to do to go on living. I must not stay on my own, with all my depressive thoughts. I will have to take up any activity \u2013 start yoga, read books, play computer games, do sports. It is also worth using my time and energy for helping other people. Helping others will give a meaning to my life, and I will have less time to plunge into the abyss of despair. To stride over grief. Without forgetting the person that meant so much in your life.<br><br>Excerpt from \"The Most Significant Person In My Life\" from http://www.custom-essays.org/examples/My_Mother_Narrative_Essay.html<br><br>The following could be a generalization about the story EXCEPT _____.",
+        "choices": {
+            "A": "treasuring each moment with the person you love is important",
+            "B": "the child learned her lesson in life when her mother passed away",
+            "C": "the joy of life is achieved through loving and caring for each other",
+            "D": "children should appreciate every moment they are with their parents"
+        },
+        "correct": "A"
+    },
+    "part1_36": {
+        "subject": "Verbal",
+        "stem": "(2) The pain of loss...<br><br>(3) Now I can say with certainty that I had never understood others suffering from unbearable loss of a dear person. For my part, it used to be pity, compassion. When this happened to me, when my dear mother died, I started to understand all those people who lost someone they loved. There are perhaps no proper words to describe this intolerable pain which tears you apart, which is like a stone on your heart, and which make tears run down your face with each recollection of the dear person that passed away. Time is unlikely to alleviate this hurt, no matter what others claim.<br><br>(4) The memory of my mother will follow me wherever I go, and however far my dreams with a gentle scent of rosemary and the shimmering silver of her laugh. My mother had a serene charisma and a soothing aura around her. She was there to show me my first butterfly and my first rain. She was there when I made my first steps. She taught me to smile and laugh.<br><br>(5) Moreover, my mother listened to all my fears and apprehensions with a gentle patience, which can only be admired. She covered my winters of self-doubt and self-hate with such warm and tender blankets of caring love. Her eyes were so soft, wandering, and full of comprehension when they focused on other people. My mother's greatest desire was only to cherish, protect, and lavish affection and care for her family. When I had really bad times, she washed me with her healing sympathy and distracted me with her brilliant humor. My mother was the only person I could really rely on.<br><br>(6) No one has ever loved me the way she did. My mother was my sole support system, whenever something exciting happened or there was a crisis in my life, she was the first person I turned to. She understood me better than anyone else I knew. I miss our talks, her support, advices, care.<br><br>(7) When my family and I found out she had cancer, I was really distraught. It was a life changing moment. I tried to do my best to support my mother as soon as I got to know that she was incurably ill. I started doing more around the house (washing dishes, cooking for my mom, etc.), so that she could rest. Apart from that, I tried to find out as much as possible about the breast cancer, still hoping that something could be done to make her healthy again. Till the day she finally passed away I had a hope that everything would turn out to be fine.<br><br>(8) These days I try hard not to think about the past and focus on my future. Although my pain is still as immense as on the day of my mom's death, now I clearly see what I have to do to go on living. I must not stay on my own, with all my depressive thoughts. I will have to take up any activity \u2013 start yoga, read books, play computer games, do sports. It is also worth using my time and energy for helping other people. Helping others will give a meaning to my life, and I will have less time to plunge into the abyss of despair. To stride over grief. Without forgetting the person that meant so much in your life.<br><br>Excerpt from \"The Most Significant Person In My Life\" from http://www.custom-essays.org/examples/My_Mother_Narrative_Essay.html<br><br>What does the persona imply when she said, \"She was the first person I turned to\"?",
+        "choices": {
+            "A": "She always considers her mother as a person to rely on",
+            "B": "She always asks her mother to be with her all the time",
+            "C": "She picks up the pieces of life with her mother",
+            "D": "She guarantees herself that her mother will heed her"
+        },
+        "correct": "B"
+    },
+    "part1_37": {
+        "subject": "Verbal",
+        "stem": "(1) \"I can't say no,\" says Madhavi Dandu, a professor and clinician at the University of California, San Francisco School of Medicine. \"I've always been that way. Most of the time I've framed it as: There are a lot of things I want to do. But now that I have two school-age children, everything I do takes away from something else, or makes it impossible to do any one thing really well.\"<br><br>(2) In addition to teaching, seeing patients, and sitting on faculty committees, Dandu fields queries from trainees seeking guidance. All get a yes. \"I received that support,\" she says, \"so I have to be there for the students.\"<br><br>(3) At her children's school, she sits on the PTA board, a race and equity curriculum committee, and the district's advisory council, and she put together a Science Day for students featuring 30 interactive stations. \"The school asked if I could do a two-day event next year,\" she says. Guess who said \"Sure.\"<br><br>(4) Dandu has high expectations for herself and doesn't like disappointing people. If something is challenging, she just figures she needs to step up. \"I say yes more than I want to because it's hard to figure out what matters most,\" she says. Though she's benefited from the projects she's taken on and the relationships she's forged, the toll is mounting. \"The checklist in my brain is always expanding. It's mentally exhausting.\"<br><br>(5) For such a tiny word, no looms large in our consciousness. We don't like saying it, and we don't like hearing it. But it is the sharpest weapon we have in the clash between our desire to connect with and please others and our need to assert and defend our individuality and autonomy. How we wield no\u2014if we do at all\u2014has great consequences for our mental health and our ability to thrive.<br><br>(6) We come up with plenty of reasons not to say no. We don't want to hurt anyone's feelings. We don't like confrontation or conflict. Or we've been raised to be polite and helpful.<br><br>(7) The word is so fraught, says linguist Nick Enfield of the University of Sydney, that we've developed a litany of ways to communicate it without actually having to say it. \"A recurrent way to say no is to not say it at all, but to produce signals that suggest a no is on the way, such as an audible breath and an interjection like 'well,' or 'um,' \" he says. \"A second-long delay by itself is often enough for others to know that a no is coming.\" An observant requester might take in these cues and jump in, in a prosocial way, to let the imminent rejecter off the hook: \"...or maybe you're too busy?\"<br><br>An excerpt from Flora, C. (2017). The Hardest Word. Retrieved from http://psychologytoday.com<br><br>According to the article, all of the following are the reasons why it is difficult to say \"no\" EXCEPT _____.",
+        "choices": {
+            "A": "something is done out of a deep sense of gratitude",
+            "B": "the benefit one gets from the commitments outweigh the disadvantages",
+            "C": "people feel that it is immodest to disappoint others who ask favor from us",
+            "D": "it is sometimes difficult to determine which engagement is more important"
+        },
+        "correct": "C"
+    },
+    "part1_38": {
+        "subject": "Verbal",
+        "stem": "(1) \"I can't say no,\" says Madhavi Dandu, a professor and clinician at the University of California, San Francisco School of Medicine. \"I've always been that way. Most of the time I've framed it as: There are a lot of things I want to do. But now that I have two school-age children, everything I do takes away from something else, or makes it impossible to do any one thing really well.\"<br><br>(2) In addition to teaching, seeing patients, and sitting on faculty committees, Dandu fields queries from trainees seeking guidance. All get a yes. \"I received that support,\" she says, \"so I have to be there for the students.\"<br><br>(3) At her children's school, she sits on the PTA board, a race and equity curriculum committee, and the district's advisory council, and she put together a Science Day for students featuring 30 interactive stations. \"The school asked if I could do a two-day event next year,\" she says. Guess who said \"Sure.\"<br><br>(4) Dandu has high expectations for herself and doesn't like disappointing people. If something is challenging, she just figures she needs to step up. \"I say yes more than I want to because it's hard to figure out what matters most,\" she says. Though she's benefited from the projects she's taken on and the relationships she's forged, the toll is mounting. \"The checklist in my brain is always expanding. It's mentally exhausting.\"<br><br>(5) For such a tiny word, no looms large in our consciousness. We don't like saying it, and we don't like hearing it. But it is the sharpest weapon we have in the clash between our desire to connect with and please others and our need to assert and defend our individuality and autonomy. How we wield no\u2014if we do at all\u2014has great consequences for our mental health and our ability to thrive.<br><br>(6) We come up with plenty of reasons not to say no. We don't want to hurt anyone's feelings. We don't like confrontation or conflict. Or we've been raised to be polite and helpful.<br><br>(7) The word is so fraught, says linguist Nick Enfield of the University of Sydney, that we've developed a litany of ways to communicate it without actually having to say it. \"A recurrent way to say no is to not say it at all, but to produce signals that suggest a no is on the way, such as an audible breath and an interjection like 'well,' or 'um,' \" he says. \"A second-long delay by itself is often enough for others to know that a no is coming.\" An observant requester might take in these cues and jump in, in a prosocial way, to let the imminent rejecter off the hook: \"...or maybe you're too busy?\"<br><br>An excerpt from Flora, C. (2017). The Hardest Word. Retrieved from http://psychologytoday.com<br><br>How do the examples from Madhavi Dandu's life support the argument that keeping a sound mental health entails learning to say \"no\"?",
+        "choices": {
+            "A": "It illustrates the dilemma faced by majority of the articles' readers, especially those who are considered to be millennials.",
+            "B": "It shows the potential mental illnesses associated with the common cultural understanding about saying \"no\".",
+            "C": "It provides a personal narrative to give an in-depth insights about the topic though these cannot be said to be true of all individuals.",
+            "D": "It does not give us an accurate picture of how saying \"no\" maintains a sound mental health."
+        },
+        "correct": "D"
+    },
+    "part1_39": {
+        "subject": "Verbal",
+        "stem": "(1) \"I can't say no,\" says Madhavi Dandu, a professor and clinician at the University of California, San Francisco School of Medicine. \"I've always been that way. Most of the time I've framed it as: There are a lot of things I want to do. But now that I have two school-age children, everything I do takes away from something else, or makes it impossible to do any one thing really well.\"<br><br>(2) In addition to teaching, seeing patients, and sitting on faculty committees, Dandu fields queries from trainees seeking guidance. All get a yes. \"I received that support,\" she says, \"so I have to be there for the students.\"<br><br>(3) At her children's school, she sits on the PTA board, a race and equity curriculum committee, and the district's advisory council, and she put together a Science Day for students featuring 30 interactive stations. \"The school asked if I could do a two-day event next year,\" she says. Guess who said \"Sure.\"<br><br>(4) Dandu has high expectations for herself and doesn't like disappointing people. If something is challenging, she just figures she needs to step up. \"I say yes more than I want to because it's hard to figure out what matters most,\" she says. Though she's benefited from the projects she's taken on and the relationships she's forged, the toll is mounting. \"The checklist in my brain is always expanding. It's mentally exhausting.\"<br><br>(5) For such a tiny word, no looms large in our consciousness. We don't like saying it, and we don't like hearing it. But it is the sharpest weapon we have in the clash between our desire to connect with and please others and our need to assert and defend our individuality and autonomy. How we wield no\u2014if we do at all\u2014has great consequences for our mental health and our ability to thrive.<br><br>(6) We come up with plenty of reasons not to say no. We don't want to hurt anyone's feelings. We don't like confrontation or conflict. Or we've been raised to be polite and helpful.<br><br>(7) The word is so fraught, says linguist Nick Enfield of the University of Sydney, that we've developed a litany of ways to communicate it without actually having to say it. \"A recurrent way to say no is to not say it at all, but to produce signals that suggest a no is on the way, such as an audible breath and an interjection like 'well,' or 'um,' \" he says. \"A second-long delay by itself is often enough for others to know that a no is coming.\" An observant requester might take in these cues and jump in, in a prosocial way, to let the imminent rejecter off the hook: \"...or maybe you're too busy?\"<br><br>An excerpt from Flora, C. (2017). The Hardest Word. Retrieved from http://psychologytoday.com<br><br>Which of the following can best substantiate the underlined statement in paragraph 5?",
+        "choices": {
+            "A": "A statistical report consisting of a small sample size taken from a local high school",
+            "B": "A group of psychologists issuing a statement in agreement with the writer's assertions",
+            "C": "An article from a peer-reviewed journal that features a study, the conclusion of which is the underlined statement",
+            "D": "A personal narrative from another source that corresponds to the ideas conveyed in the underlined statement"
+        },
+        "correct": "C"
+    },
+    "part1_40": {
+        "subject": "Verbal",
+        "stem": "(1) \"I can't say no,\" says Madhavi Dandu, a professor and clinician at the University of California, San Francisco School of Medicine. \"I've always been that way. Most of the time I've framed it as: There are a lot of things I want to do. But now that I have two school-age children, everything I do takes away from something else, or makes it impossible to do any one thing really well.\"<br><br>(2) In addition to teaching, seeing patients, and sitting on faculty committees, Dandu fields queries from trainees seeking guidance. All get a yes. \"I received that support,\" she says, \"so I have to be there for the students.\"<br><br>(3) At her children's school, she sits on the PTA board, a race and equity curriculum committee, and the district's advisory council, and she put together a Science Day for students featuring 30 interactive stations. \"The school asked if I could do a two-day event next year,\" she says. Guess who said \"Sure.\"<br><br>(4) Dandu has high expectations for herself and doesn't like disappointing people. If something is challenging, she just figures she needs to step up. \"I say yes more than I want to because it's hard to figure out what matters most,\" she says. Though she's benefited from the projects she's taken on and the relationships she's forged, the toll is mounting. \"The checklist in my brain is always expanding. It's mentally exhausting.\"<br><br>(5) For such a tiny word, no looms large in our consciousness. We don't like saying it, and we don't like hearing it. But it is the sharpest weapon we have in the clash between our desire to connect with and please others and our need to assert and defend our individuality and autonomy. How we wield no\u2014if we do at all\u2014has great consequences for our mental health and our ability to thrive.<br><br>(6) We come up with plenty of reasons not to say no. We don't want to hurt anyone's feelings. We don't like confrontation or conflict. Or we've been raised to be polite and helpful.<br><br>(7) The word is so fraught, says linguist Nick Enfield of the University of Sydney, that we've developed a litany of ways to communicate it without actually having to say it. \"A recurrent way to say no is to not say it at all, but to produce signals that suggest a no is on the way, such as an audible breath and an interjection like 'well,' or 'um,' \" he says. \"A second-long delay by itself is often enough for others to know that a no is coming.\" An observant requester might take in these cues and jump in, in a prosocial way, to let the imminent rejecter off the hook: \"...or maybe you're too busy?\"<br><br>An excerpt from Flora, C. (2017). The Hardest Word. Retrieved from http://psychologytoday.com<br><br>Which of the following is most likely to be considered as a valid criticism of the article?",
+        "choices": {
+            "A": "The example and narratives given reflect only the perspective of an accomplished professor and does not mention other professions, let alone blue collar workers.",
+            "B": "The credibility of the article is highly diminished by the fact that it has been published in a popular magazine rather than a scholarly compendium.",
+            "C": "The psychologist mentioned in the article lack the credentials in order to make an authoritative claim.",
+            "D": "The featured topic is immaterial to the needs of the general reading public."
+        },
+        "correct": "D"
+    }
+};
+
+const AppState = {
+    sectionIndex: 0,
+    currentItem: 1,
+    answers: {},     // { 'part1_3': 'B' }
+    revisited: {},   // { 'part1_3': true }
+    gridFilter: 'all',
+    timerInterval: null,
+    timeLeft: 0
+};
+
+function getSection() {
+    return SECTIONS[AppState.sectionIndex];
+}
+
+function itemKey(item) {
+    return `${getSection().key}_${item}`;
+}
+
+// --- Subject lookup for Part 1 / Part 2 placeholder content ---
+function getSubjectLabel(sectionKey, qNum) {
+    if (sectionKey === 'part1') {
+        if (qNum <= 17) return { title: 'TEST A. VERBAL', sub: 'Analogies' };
+        if (qNum <= 40) return { title: 'TEST A. VERBAL', sub: 'Reading Comprehension' };
+        if (qNum <= 80) return { title: 'TEST B. INDUCTIVE REASONING', sub: 'Pattern Recognition' };
+        if (qNum <= 120) return { title: 'TEST C. QUANTITATIVE', sub: 'Problem Solving' };
+        return { title: 'TEST D. PERCEPTUAL ACUITY', sub: 'Hidden Figures' };
+    }
+    if (sectionKey === 'part2') {
+        if (qNum <= 50) return { title: 'TEST E. BIOLOGY', sub: '' };
+        if (qNum <= 100) return { title: 'TEST F. PHYSICS', sub: '' };
+        if (qNum <= 150) return { title: 'TEST G. SOCIAL SCIENCE', sub: '' };
+        return { title: 'TEST H. CHEMISTRY', sub: '' };
+    }
+    return { title: '', sub: '' };
+}
+
+// --- Rendering ---
+
+function renderAll() {
+    renderDropdown();
+    renderBody();
+    renderPagination();
+    renderAttemptedCounter();
+    renderNavButtons();
+}
+
+function renderDropdown() {
+    document.getElementById('section-dropdown').value = getSection().key;
+}
+
+function renderBody() {
+    const section = getSection();
+    const qNum = AppState.currentItem;
+
+    document.getElementById('q-number-display').innerText = `Question ${qNum}`;
+
+    const revisitBtn = document.getElementById('revisit-btn');
+    revisitBtn.classList.toggle('active', !!AppState.revisited[itemKey(qNum)]);
+
+    const questionTextEl = document.getElementById('question-text');
+    const choicesContainer = document.getElementById('choices-container');
+    const responseBox = document.getElementById('response-box');
+    const clearBtn = document.getElementById('clear-response-btn');
+    const rightTitle = document.getElementById('right-panel-title');
+
+    if (section.kind === 'test') {
+        // Question + revisit live on the LEFT, choices live on the RIGHT.
+        const bankEntry = QUESTION_BANK[itemKey(qNum)];
+        const { title, sub } = getSubjectLabel(section.key, qNum);
+
+        if (bankEntry) {
+            questionTextEl.innerHTML = `<strong>${title}</strong>${sub ? `<br><em>${sub}</em>` : ''}<br><br>` +
+                `${bankEntry.stem}`;
+        } else {
+            questionTextEl.innerHTML = `<strong>${title}</strong>${sub ? `<br><em>${sub}</em>` : ''}<br><br>` +
+                `This is a placeholder for Question ${qNum}. Read the item at the right and select the best answer.`;
+        }
+
+        choicesContainer.classList.remove('hidden');
+        responseBox.classList.add('hidden');
+        clearBtn.classList.remove('hidden');
+        rightTitle.innerText = 'Select an option';
+
+        choicesContainer.innerHTML = '';
+        ['A', 'B', 'C', 'D'].forEach(opt => {
+            const label = document.createElement('label');
+            label.className = 'choice-label';
+
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = `question-${section.key}-${qNum}`;
+            radio.value = opt;
+            radio.checked = AppState.answers[itemKey(qNum)] === opt;
+
+            radio.addEventListener('change', (e) => {
+                AppState.answers[itemKey(AppState.currentItem)] = e.target.value;
+                renderPagination();
+                renderAttemptedCounter();
+            });
+
+            const optionText = bankEntry ? bankEntry.choices[opt] : `Option ${opt}`;
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(` (${opt}) ${optionText}`));
+            choicesContainer.appendChild(label);
+        });
+    } else {
+        // Reminders / Break / End: meta content on the LEFT, inert response box on the RIGHT.
+        choicesContainer.classList.add('hidden');
+        responseBox.classList.remove('hidden');
+        clearBtn.classList.add('hidden');
+        rightTitle.innerText = 'Enter your Response';
+        responseBox.value = '';
+
+        questionTextEl.innerHTML = getMetaScreenHTML(section.key);
+        questionTextEl.className = 'meta-screen';
+    }
+
+    if (section.kind === 'test') {
+        questionTextEl.className = '';
+    }
+}
+
+function getMetaScreenHTML(sectionKey) {
+    if (sectionKey === 'reminders') {
+        return `
+            <h2>IMPORTANT REMINDERS AND CERTIFYING STATEMENT</h2>
+            <p>By proceeding, you certify that you are the registered examinee and that you will not use
+            any prohibited materials (phones, reviewers, notes) during this simulation.</p>
+            <p style="margin-top:12px;">Click <strong>Next</strong> to begin Part 1. Once the timer starts, it cannot be paused.</p>
+        `;
+    }
+    if (sectionKey === 'break') {
+        return `
+            <h2>10-MINUTE BREAK</h2>
+            <p>In the actual test, you will be monitored live by a human proctor even during the 10-minute
+            break. You may stand, stretch, get refreshments or snacks, rest your eyes, or take a restroom
+            break. Please send a message to your proctor before leaving the test area.</p>
+            <p class="warn" style="margin-top:12px;">Do NOT use any prohibited item (cellphones, reviewers, etc.) during this break.</p>
+            <div class="large-timer" id="break-large-timer">10:00</div>
+            <p>After 10 minutes, click Next Section to proceed. There is no need to enter a response in the box at the right.</p>
+        `;
+    }
+    if (sectionKey === 'end') {
+        return `
+            <h2>END OF TEST</h2>
+            <p>You have completed the National Medical Admission Test (NMAT) simulation.</p>
+            <p class="warn" style="margin-top:12px;">DO NOT CLICK Save and Close or Finish Test in the actual exam.</p>
+            <p style="margin-top:12px;">In the actual test, you will NOT be able to return to any previous section once you submit.</p>
+            <button class="nav-btn primary" id="btn-view-score" style="margin-top:20px;">View Score and Mistakes</button>
+        `;
+    }
+    return '';
+}
+
+function renderPagination() {
+    const container = document.getElementById('pagination-container');
+    container.innerHTML = '';
+
+    const section = getSection();
+    const total = section.total;
+    const current = AppState.currentItem;
+
+    let start = Math.max(1, current - 4);
+    let end = Math.min(total, start + 9);
+    if (end - start < 9) start = Math.max(1, end - 9);
+
+    for (let i = start; i <= end; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn';
+        btn.innerText = i;
+
+        if (i === current) btn.classList.add('active');
+        else if (AppState.revisited[`${section.key}_${i}`]) btn.classList.add('revisited');
+        else if (AppState.answers[`${section.key}_${i}`]) btn.classList.add('attempted');
+
+        btn.addEventListener('click', () => {
+            AppState.currentItem = i;
+            renderAll();
+        });
+
+        container.appendChild(btn);
+    }
+}
+
+function renderAttemptedCounter() {
+    const section = getSection();
+    let count = 0;
+    for (let i = 1; i <= section.total; i++) {
+        if (AppState.answers[`${section.key}_${i}`]) count++;
+    }
+    document.getElementById('attempted-display').innerText = `Attempted: ${count}/${section.total}`;
+}
+
+function renderNavButtons() {
+    const section = getSection();
+    const prevBtn = document.getElementById('btn-prev');
+    const nextBtn = document.getElementById('btn-next');
+    const isFirstItem = AppState.currentItem === 1;
+    const isLastSection = AppState.sectionIndex === SECTIONS.length - 1;
+    const isLastItem = AppState.currentItem === section.total;
+
+    // Once you've left a section you can never return to it (matches the real
+    // NMAT), so "Previous" simply has nothing to do at item 1 of a section.
+    prevBtn.innerText = 'Previous';
+    prevBtn.disabled = isFirstItem;
+
+    nextBtn.innerText = isLastItem ? 'Next Section' : 'Next';
+    nextBtn.disabled = isLastItem && isLastSection;
+}
+
+// --- Section / Item Navigation ---
+
+function goToItem(delta) {
+    const section = getSection();
+    const target = AppState.currentItem + delta;
+
+    if (target < 1) {
+        // Crossing backward into a previous section is not allowed once you've moved on.
+        return;
+    }
+    if (target > section.total) {
+        requestNextSection();
+        return;
+    }
+    AppState.currentItem = target;
+    renderAll();
+}
+
+function requestNextSection() {
+    if (AppState.sectionIndex >= SECTIONS.length - 1) return;
+
+    const nextSection = SECTIONS[AppState.sectionIndex + 1];
+    const nextLabel = nextSection.label.replace(/^\d+\.\s*/, '');
+    document.getElementById('confirm-message').innerText =
+        `Next section: ${nextLabel}. Are you sure you would like to proceed to the next section? ` +
+        `You will not be able to go back to this section again.`;
+    document.getElementById('confirm-modal').classList.remove('hidden');
+}
+
+function goToNextSection() {
+    if (AppState.sectionIndex < SECTIONS.length - 1) {
+        AppState.sectionIndex++;
+        AppState.currentItem = 1;
+        renderAll();
+        startSectionTimerIfNeeded();
+    }
+}
+
+// --- Timers (run silently in the background; only the Break screen surfaces one,
+// matching the real demo where Part 1 / Part 2 show no visible countdown) ---
+
+function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    if (h > 0) return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+}
+
+function startSectionTimerIfNeeded() {
+    clearInterval(AppState.timerInterval);
+    const section = getSection();
+    const mainTimerEl = document.getElementById('main-timer');
+
+    if (!section.timer) {
+        mainTimerEl.classList.add('hidden');
+        return;
+    }
+
+    mainTimerEl.classList.remove('hidden');
+    AppState.timeLeft = section.timer;
+    updateTimerDisplay();
+
+    AppState.timerInterval = setInterval(() => {
+        AppState.timeLeft--;
+        updateTimerDisplay();
+        if (AppState.timeLeft <= 0) {
+            clearInterval(AppState.timerInterval);
+            goToNextSection();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const formatted = formatTime(AppState.timeLeft);
+    document.getElementById('main-timer').innerText = formatted;
+
+    if (getSection().key === 'break') {
+        const el = document.getElementById('break-large-timer');
+        if (el) el.innerText = formatted;
+    }
+}
+
+// --- Grid Modal ---
+
+function renderGrid() {
+    const gridContainer = document.getElementById('grid-container');
+    gridContainer.innerHTML = '';
+    const section = getSection();
+
+    for (let i = 1; i <= section.total; i++) {
+        const key = `${section.key}_${i}`;
+        if (AppState.gridFilter === 'attempted' && !AppState.answers[key]) continue;
+        if (AppState.gridFilter === 'revisited' && !AppState.revisited[key]) continue;
+        if (AppState.gridFilter === 'unattempted' && (AppState.answers[key] || AppState.revisited[key])) continue;
+
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+        gridItem.innerText = i;
+
+        if (i === AppState.currentItem) gridItem.classList.add('active');
+        if (AppState.revisited[key]) gridItem.classList.add('revisited');
+        else if (AppState.answers[key]) gridItem.classList.add('attempted');
+
+        gridItem.addEventListener('click', () => {
+            AppState.currentItem = i;
+            document.getElementById('grid-modal').classList.add('hidden');
+            renderAll();
+        });
+
+        gridContainer.appendChild(gridItem);
+    }
+}
+
+// --- Event Wiring ---
+
+document.getElementById('btn-start-test').addEventListener('click', () => {
+    document.getElementById('start-view').classList.add('hidden');
+    document.getElementById('main-app').classList.remove('hidden');
+    AppState.sectionIndex = 0;
+    AppState.currentItem = 1;
+    renderAll();
+    startSectionTimerIfNeeded();
+});
+
+document.getElementById('btn-prev').addEventListener('click', () => goToItem(-1));
+document.getElementById('btn-next').addEventListener('click', () => goToItem(1));
+document.getElementById('nav-left').addEventListener('click', () => goToItem(-1));
+document.getElementById('nav-right').addEventListener('click', () => goToItem(1));
+
+document.getElementById('confirm-yes').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.add('hidden');
+    goToNextSection();
+});
+
+document.getElementById('confirm-no').addEventListener('click', () => {
+    document.getElementById('confirm-modal').classList.add('hidden');
+});
+
+document.getElementById('revisit-btn').addEventListener('click', () => {
+    const key = itemKey(AppState.currentItem);
+    if (AppState.revisited[key]) delete AppState.revisited[key];
+    else AppState.revisited[key] = true;
+    renderBody();
+    renderPagination();
+});
+
+document.getElementById('clear-response-btn').addEventListener('click', () => {
+    const key = itemKey(AppState.currentItem);
+    if (AppState.answers[key]) {
+        delete AppState.answers[key];
+        renderBody();
+        renderPagination();
+        renderAttemptedCounter();
+    }
+});
+
+document.getElementById('open-grid-btn').addEventListener('click', () => {
+    AppState.gridFilter = 'all';
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector('.tab-btn[data-filter="all"]').classList.add('active');
+    renderGrid();
+    document.getElementById('grid-modal').classList.remove('hidden');
+});
+
+document.getElementById('close-grid-btn').addEventListener('click', () => {
+    document.getElementById('grid-modal').classList.add('hidden');
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        AppState.gridFilter = e.target.dataset.filter;
+        renderGrid();
+    });
+});
+
+// --- Score & Mistakes Report ---
+// Only items present in QUESTION_BANK are gradable; everything else is a
+// placeholder and is excluded from scoring.
+
+function buildResults() {
+    const bySubject = {}; // { 'Quantitative': { correct: 0, total: 0, mistakes: [] } }
+
+    Object.keys(QUESTION_BANK).forEach((key) => {
+        const q = QUESTION_BANK[key];
+        const given = AppState.answers[key];
+        if (!bySubject[q.subject]) bySubject[q.subject] = { correct: 0, total: 0, mistakes: [] };
+        bySubject[q.subject].total++;
+
+        if (given && given === q.correct) {
+            bySubject[q.subject].correct++;
+        } else {
+            bySubject[q.subject].mistakes.push({ key, q, given: given || null });
+        }
+    });
+
+    return bySubject;
+}
+
+function formatMistakeForCopy(item) {
+    const { q, given } = item;
+    const lines = [];
+
+    // Replace base64 images with [Image Question] for readable copy-pasting
+    let cleanStem = q.stem.replace(/<img[^>]*>/g, '[Image Question]');
+    lines.push(cleanStem);
+    ['A', 'B', 'C', 'D'].forEach(opt => {
+        let line = `${opt}. ${q.choices[opt]}`;
+        if (opt === q.correct) line += ' (Correct Answer)';
+        if (given && opt === given && given !== q.correct) line += ' (Your Answer)';
+        lines.push(line);
+    });
+    if (!given) lines.push('(Not answered)');
+    lines.push('Error tag: ');
+    return lines.join('\n');
+}
+
+function copyText(text, feedbackEl) {
+    const showFallback = () => {
+        feedbackEl.classList.remove('hidden');
+        feedbackEl.value = text;
+        feedbackEl.select();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(showFallback);
+    } else {
+        showFallback();
+    }
+}
+
+function renderScoreReport() {
+    const results = buildResults();
+    const body = document.getElementById('score-report-body');
+    body.innerHTML = '';
+
+    let overallCorrect = 0;
+    let overallTotal = 0;
+    const allMistakeTexts = [];
+
+    Object.keys(results).forEach((subject) => {
+        const r = results[subject];
+        overallCorrect += r.correct;
+        overallTotal += r.total;
+
+        const section = document.createElement('div');
+        section.className = 'score-section';
+
+        const heading = document.createElement('h3');
+        heading.innerText = `${subject}: ${r.correct}/${r.total} correct`;
+        section.appendChild(heading);
+
+        if (r.mistakes.length === 0) {
+            const p = document.createElement('p');
+            p.innerText = 'No mistakes in this sample section.';
+            section.appendChild(p);
+        }
+
+        r.mistakes.forEach((item, idx) => {
+            const text = formatMistakeForCopy(item);
+            allMistakeTexts.push(text);
+
+            const card = document.createElement('div');
+            card.className = 'mistake-card';
+
+            const pre = document.createElement('pre');
+            pre.innerText = text;
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'nav-btn';
+            copyBtn.innerText = 'Copy';
+
+            const fallback = document.createElement('textarea');
+            fallback.className = 'copy-fallback hidden';
+            fallback.readOnly = true;
+
+            copyBtn.addEventListener('click', () => copyText(text, fallback));
+
+            card.appendChild(pre);
+            card.appendChild(copyBtn);
+            card.appendChild(fallback);
+            section.appendChild(card);
+        });
+
+        body.appendChild(section);
+    });
+
+    document.getElementById('score-overall').innerText =
+        overallTotal > 0 ? `Overall (graded sample items): ${overallCorrect}/${overallTotal} correct` : 'No graded sample items answered yet.';
+
+    const copyAllBtn = document.getElementById('copy-all-mistakes');
+    const copyAllFallback = document.getElementById('copy-all-fallback');
+    copyAllBtn.onclick = () => copyText(allMistakeTexts.join('\n\n'), copyAllFallback);
+}
+
+document.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'btn-view-score') {
+        renderScoreReport();
+        document.getElementById('score-modal').classList.remove('hidden');
+    }
+});
+
+document.getElementById('close-score-btn').addEventListener('click', () => {
+    document.getElementById('score-modal').classList.add('hidden');
+});
+
+</script>
+</body>
+</html>
