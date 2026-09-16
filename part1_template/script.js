@@ -173,6 +173,7 @@ function getMetaScreenHTML(sectionKey) {
             <p class="warn" style="margin-top:12px;">DO NOT CLICK Save and Close or Finish Test in the actual exam.</p>
             <p style="margin-top:12px;">In the actual test, you will NOT be able to return to any previous section once you submit.</p>
             <button class="nav-btn primary" id="btn-view-score" style="margin-top:20px;">View Score and Mistakes</button>
+            <button class="nav-btn" id="btn-review-qa" style="margin-top:20px; background-color: #5bc0de; color: white;">Review Questions and Answers</button>
         `;
     }
     return '';
@@ -537,3 +538,56 @@ document.addEventListener('click', (e) => {
 document.getElementById('close-score-btn').addEventListener('click', () => {
     document.getElementById('score-modal').classList.add('hidden');
 });
+
+function renderReviewQA() {
+    const mainContent = document.getElementById('main-content');
+    let html = '<h2>Review Questions and Answers</h2><div class="review-container" style="text-align:left; padding: 20px; overflow-y:auto; max-height:80vh;">';
+
+    // Group by section
+    SECTIONS.forEach(sec => {
+        if (sec.kind !== 'test') return;
+        html += `<h3>${sec.label}</h3>`;
+
+        let currentSubject = '';
+        for (let i = 1; i <= sec.total; i++) {
+            const key = `${sec.key}_${i}`;
+            const q = QUESTION_BANK[key];
+            if (!q) continue; // Skip unpopulated questions
+
+            const subjLabel = getSubjectLabel(sec.key, i).title;
+            if (subjLabel !== currentSubject) {
+                html += `<h4>${subjLabel}</h4>`;
+                currentSubject = subjLabel;
+            }
+
+            const userAns = AppState.answers[key];
+            const correctAns = q.correct;
+
+            html += `<div class="review-item" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee;">`;
+            html += `<div><strong>Q${i}.</strong> ${q.stem}</div>`;
+            html += `<div class="review-choices" style="margin-top: 10px;">`;
+
+            Object.keys(q.choices).forEach(choiceKey => {
+                const isCorrect = choiceKey === correctAns;
+                const isUser = choiceKey === userAns;
+                let colorStyle = '';
+
+                if (isCorrect) {
+                    colorStyle = 'color: #8db600; font-weight: bold;'; // apple-green
+                } else if (isUser) {
+                    colorStyle = 'color: #00ffff; font-weight: bold;'; // fluorescent blue
+                }
+
+                html += `<div style="${colorStyle}"><strong>${choiceKey}.</strong> ${q.choices[choiceKey]}</div>`;
+            });
+
+            html += `</div></div>`;
+        }
+    });
+
+    html += '</div><button onclick="location.reload()" class="btn primary" style="margin-top: 15px;">Restart Test</button>';
+    mainContent.innerHTML = html;
+
+    const bottomNav = document.getElementById('bottom-nav');
+    if (bottomNav) bottomNav.style.display = 'none';
+}
