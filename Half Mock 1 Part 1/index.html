@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NMAT Practice Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Pre-Test Start Screen -->
+    <div class="app-container" id="start-view">
+        <div class="start-container">
+            <div class="logo-section start-logo">
+                <div class="mock-logo"></div>
+                <h1 class="test-title">PRACTICE TEST_NMAT_R</h1>
+            </div>
+            <div class="start-card">
+                <h2>Before you begin</h2>
+                <ul class="start-checklist">
+                    <li>This simulation follows the real NMAT interface: fixed section order, and no going back once a part is submitted.</li>
+                    <li id="part1-timer-desc">Part 1 (Verbal, Inductive, Quantitative, Perceptual Acuity) is timed at <span id="part1-time"></span>.</li>
+
+                    <li>Once you click Start Test, the certifying statement will appear first, followed by Part 1. Timers begin automatically per section.</li>
+                </ul>
+                <button class="nav-btn primary start-btn" id="btn-start-test">Start Test</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container hidden" id="main-app">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="logo-section">
+                <div class="mock-logo"></div>
+                <h1 class="test-title">PRACTICE TEST_NMAT_R</h1>
+            </div>
+            <div class="header-center">
+                <div class="timer hidden" id="main-timer">00:00:00</div>
+            </div>
+            <div class="header-right">
+                <span class="saved-status">Saved: 0 seconds ago</span>
+                <i class="fa fa-user utility-icon"></i>
+                <i class="fa fa-cog utility-icon"></i>
+            </div>
+        </header>
+
+        <!-- Sub Header (persistent chrome across ALL sections, including break/end) -->
+        <div class="sub-header">
+            <div class="sh-left">
+                <select id="section-dropdown" disabled>
+                    <option value="reminders">1. Important Reminders</option>
+                    <option value="part1">2. Part 1</option>
+
+
+                    <option value="end">3. End Test Page</option>
+                </select>
+            </div>
+            <div class="sh-center">
+                <button class="nav-arrow" id="nav-left">&lt;</button>
+                <div class="pagination" id="pagination-container"></div>
+                <button class="nav-arrow" id="nav-right">&gt;</button>
+                <button class="grid-icon-btn" id="open-grid-btn"><i class="fa fa-th"></i></button>
+            </div>
+            <div class="sh-right">
+                <button class="nav-btn" id="btn-prev">Previous</button>
+                <button class="nav-btn primary" id="btn-next">Next</button>
+            </div>
+        </div>
+        <div class="attempted-bar">
+            <span id="attempted-display">Attempted: 0/0</span>
+        </div>
+
+        <!-- Content Body -->
+        <div class="main-content">
+            <!-- Left Panel: Question number, revisit later, question/passage text -->
+            <div class="left-panel">
+                <div class="question-header">
+                    <span class="question-number" id="q-number-display">Question 1</span>
+                    <button class="revisit-btn" id="revisit-btn">
+                        <i class="fa fa-flag"></i> Revisit Later
+                    </button>
+                </div>
+                <div id="question-body-left">
+                    <p id="question-text">Loading question...</p>
+                </div>
+            </div>
+
+            <!-- Right Panel: Choices OR free-response box (break/end screens) -->
+            <div class="right-panel">
+                <div class="right-panel-header">
+                    <span id="right-panel-title">Select an option</span>
+                    <button class="clear-btn hidden" id="clear-response-btn">Clear Response</button>
+                </div>
+                <div class="choices" id="choices-container"></div>
+                <textarea class="response-box hidden" id="response-box" placeholder="Enter your Response" readonly></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score & Mistakes Modal -->
+    <div class="modal-overlay hidden" id="score-modal">
+        <div class="modal-content score-modal-content">
+            <div class="modal-header">
+                <h2>Score & Mistakes</h2>
+                <button class="close-btn" id="close-score-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="score-overall" class="score-overall"></p>
+                <div class="score-actions">
+                    <button class="nav-btn" id="copy-all-mistakes">Copy All Mistakes</button>
+                </div>
+                <textarea class="copy-fallback hidden" id="copy-all-fallback" readonly></textarea>
+                <div id="score-report-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next Section Confirmation Dialog -->
+    <div class="modal-overlay hidden" id="confirm-modal">
+        <div class="modal-content confirm-content">
+            <div class="modal-header">
+                <h2>Confirm</h2>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Are you sure?</p>
+            </div>
+            <div class="confirm-actions">
+                <button class="nav-btn" id="confirm-no">No</button>
+                <button class="nav-btn primary" id="confirm-yes">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid View Modal -->
+    <div class="modal-overlay hidden" id="grid-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Question Grid</h2>
+                <button class="close-btn" id="close-grid-btn">&times;</button>
+            </div>
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-filter="all">All</button>
+                <button class="tab-btn" data-filter="attempted">Attempted</button>
+                <button class="tab-btn" data-filter="revisited">Revisited</button>
+                <button class="tab-btn" data-filter="unattempted">Unattempted</button>
+            </div>
+            <div class="modal-body">
+                <div class="grid-container" id="grid-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function formatTimeHuman(seconds) {
+                const h = Math.floor(seconds / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                const s = seconds % 60;
+
+                let parts = [];
+                if (h > 0) parts.push(h + ' hour' + (h > 1 ? 's' : ''));
+                if (m > 0) parts.push(m + ' minute' + (m > 1 ? 's' : ''));
+                if (s > 0) parts.push(s + ' second' + (s > 1 ? 's' : ''));
+                if (parts.length === 0) return '0 seconds';
+                return parts.join(' and ');
+            }
+
+            if (typeof SECTIONS !== 'undefined') {
+                const part1 = SECTIONS.find(s => s.key === 'part1');
+                if (part1 && document.getElementById('part1-time')) {
+                    document.getElementById('part1-time').innerText = formatTimeHuman(part1.timer);
+                }
+                const part2 = SECTIONS.find(s => s.key === 'part2');
+                if (part2 && document.getElementById('part2-time')) {
+                    document.getElementById('part2-time').innerText = formatTimeHuman(part2.timer);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
