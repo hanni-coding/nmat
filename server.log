@@ -1,0 +1,5 @@
+127.0.0.1 - - [16/Sep/2026 02:12:24] "GET /part1_template/ HTTP/1.1" 200 -
+127.0.0.1 - - [16/Sep/2026 02:12:24] "GET /part1_template/styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [16/Sep/2026 02:12:24] "GET /part1_template/script.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Sep/2026 02:12:30] "GET /part1_template/images/inductive_32.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [16/Sep/2026 02:12:31] "GET /part1_template/images/perceptual_95.jpg HTTP/1.1" 200 -
